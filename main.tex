@@ -1,230 +1,272 @@
-\documentclass[10pt,letterpaper]{article}
-\usepackage[top=0.85in,left=2.75in,footskip=0.75in,marginparwidth=2in]{geometry}
+\documentclass[a4paper,11pt]{article}
 
-% use Unicode characters - try changing the option if you run into troubles with special characters (e.g. umlauts)
+% Wider margins (compared to default)
+\usepackage[margin=2.5cm]{geometry}
+
+% English support (typography and hyphenation)
+\usepackage[english]{babel}
+
+% Unicode encoding
 \usepackage[utf8]{inputenc}
 
-% clean citations
-\usepackage{cite}
+% Better default font (Libertine and Inconsolata)
+\usepackage[ttscale=.875]{libertine}
+\usepackage[scaled=0.96]{zi4}
 
-% hyperref makes references clicky. use \url{www.example.com} or \href{www.example.com}{description} to add a clicky url
-\usepackage{nameref,hyperref}
+% Biber
+\usepackage[backend=biber, style=numeric, natbib=true]{biblatex}
+\bibliography{library.bib}
 
-% line numbers
-\usepackage[right]{lineno}
-
-% improves typesetting in LaTeX
-\usepackage{microtype}
-\DisableLigatures[f]{encoding = *, family = * }
-
-% text layout - change as needed
-\raggedright
-\setlength{\parindent}{0.5cm}
-\textwidth 5.25in 
-\textheight 8.75in
-
-% Remove % for double line spacing
-%\usepackage{setspace} 
-%\doublespacing
-
-% use adjustwidth environment to exceed text width (see examples in text)
-\usepackage{changepage}
-
-% adjust caption style
-\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,singlelinecheck=off]{caption}
-
-% remove brackets from references
-\makeatletter
-\renewcommand{\@biblabel}[1]{\quad#1.}
-\makeatother
-
-% headrule, footrule and page numbers
-\usepackage{lastpage,fancyhdr,graphicx}
-\usepackage{epstopdf}
-\pagestyle{myheadings}
-\pagestyle{fancy}
-\fancyhf{}
-\rfoot{\thepage/\pageref{LastPage}}
-\renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
-\fancyheadoffset[L]{2.25in}
-\fancyfootoffset[L]{2.25in}
-
-% use \textcolor{color}{text} for colored text (e.g. highlight to-do areas)
-\usepackage{color}
-
-% define custom colors (this one is for figure captions)
-\definecolor{Gray}{gray}{.25}
-
-% this is required to include graphics
+% Graphics
 \usepackage{graphicx}
 
-% use if you want to put caption to the side of the figure - see example in text
-\usepackage{sidecap}
 
-% use for have text wrap around figures
-\usepackage{wrapfig}
-\usepackage[pscoord]{eso-pic}
-\usepackage[fulladjust]{marginnote}
-\reversemarginpar
+% Code Listing
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{listings}
+\surroundwithmdframed[
+%  hidealllines=true,
+  linewidth=0.25pt,
+  linecolor=black!50,
+  backgroundcolor=black!4,
+  innerleftmargin=8pt,
+  innertopmargin=3pt,
+  innerbottommargin=3pt]{lstlisting}
+\lstset{ %
+  basicstyle=\small\tt\linespread{0.75},
+  language=Python,
+  commentstyle=\color{gray},
+  columns=fullflexible,
+}
 
-% document begins here
+
+% Hyperref
+\usepackage{xcolor}
+\definecolor{blendedblue}{rgb}{0.2, 0.2, 0.6}
+\definecolor{blendedred}{rgb}{0.8, 0.2, 0.2}
+\usepackage[bookmarks=true,
+            breaklinks=true,
+            pdfborder={0 0 0},
+            citecolor=blendedblue,
+            colorlinks=true,
+            linkcolor=blendedblue,
+            urlcolor=blendedblue,
+            citecolor=blendedblue,
+            linktocpage=false,
+            hyperindex=true,
+            linkbordercolor=white]{hyperref}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true}
+
+
+
+\title{The R Quintuplet (R$^5$)}
+\author{Nicolas P. Rougier and Fabien C. Y. Benureau}
+\date{\today}
+
 \begin{document}
-\vspace*{0.35in}
+\maketitle
 
-% title goes here:
-\begin{flushleft}
-{\Large
-\textbf\newline{\LaTeX Template for Manuscripts with Embedded Figures.}
-}
-\newline
-% authors go here:
-\\
-Author 1\textsuperscript{1},
-Author 2\textsuperscript{2},
-Author 3\textsuperscript{1},
-Author 4\textsuperscript{1},
-Author 5\textsuperscript{2},
-Author 6\textsuperscript{2},
-Author 7\textsuperscript{1,*}
-\\
-\bigskip
-\bf{1} Affiliation A
-\\
-\bf{2} Affiliation B
-\\
-\bigskip
-* correseponding@author.mail
+% -------------------------
+\section*{Introduction (R$^{\mathbf 0}$)}
 
-\end{flushleft}
+Scientific reproducibility and replicability issues have received increased attention in the past few years and computer science is no exception.
+One could think that computer science would mostly be shielded from those issues. 
+But precisely because it is easy to believe that if a program runs once (and gives expected results) it will do so forever, crucial steps to transform working code into meaningful scientific contributions are rarely undertaken; computer science is victim of reproducibility and replicability issues precisely because it seems impervious to them.
 
-\section*{Abstract}
-Fitting multiple figures into very tight manuscripts while keeping it pleasant to read is challenging. Therefore figures are often simply attached to the very end of a manuscript file. While easier for the authors, this practice is inconvenient for readers. This \LaTeX template shows how to generate a compiled PDF with figures embedded into the text. It provides several examples of how to embed figures or tables directly into the text thus giving you a range of options from which you should choose the one best suited for your manuscript. Check out Schlegel et al., (2016) as example of use \cite{Schlegel2016}.
+In fact, a program can fail in many different ways at many different levels for many different reasons.
+Borrowing the terms coined by Ann Gobble, for your program to survive for some noticeable time, you have to make sure it is re-runnable, repeatable, reproducible, replicate and re-usable.\\
 
-% now start line numbers
-\linenumbers
+Let us illustrate this with a very simple example, a random walk written in Python:
 
-% the * after section prevents numbering
-\section*{Introduction}
-In the introduction you will see an example of text wrapping around the figure with a figure caption on the margin (Fig. \ref{fig1}). This is done by combining the \verb!wrapfigure! with % avoid blank space here 
-\marginpar{
-\vspace{.7cm} % adjust vertical position relative to text with \vspace{} - note that you can enter negative numbers to move margin caption up
-\color{Gray} % this gives caption a grey color to set it apart from text body
-\textbf{Figure \ref{fig1}. Example of a margin caption.} % note that \ref{fig1} refers to the corresponding wrapfigure
-Setting up your figure + caption like this looks fancy and does not disrupt the flow of the text. But it requires more manual adjustments (position, spacing, labeling) compared to using standard \LaTeX figure environments.
-}
-\begin{wrapfigure}[19]{l}{75mm}
-% the number in [] of wrapfigure is optional and gives the number of text lines that should be wrapped around the text. Adjust according to your figures height
-\includegraphics[width=75mm]{fig1.pdf}
-\captionsetup{labelformat=empty} % makes sure dummy caption is blank
-\caption{} % add dummy caption - otherwise \label won't work and figure numbering will not count up
-\label{fig1} % use \ref{fig1} to reference to this figure
-\end{wrapfigure} % avoid blank space here
-the \verb!marginnote! environment. Please note that in this case the figure (\verb!wrapfigure!) and the figure caption (\verb!marginpar!) have to be separated as you can tell from the code. The \verb!wrapfigure! environment can be a bit tricky when it comes to text formatting. Thus some general hints: (a) try to avoid line breaks in the code as this may result in weird formatting around the figure, (b) the figure should not span multiple headlines (sections) and (c) if you encounter problems with the line break right after the \verb!wrapfigure! try using \verb!\mbox{}! to prevent premature line breaks (\mbox{see example in code}). As stated in the figure caption, setting up figures this way requires a bit more manual adjustments but it makes figures blend in nicely without interrupting flow of text.
+\begin{lstlisting}
+# A random walker (R0)
+import numpy as np
 
-\section*{Materials and Methods}
+# randomly choose ten instances of either 1 or -1. 
+steps = np.random.choice([-1,+1], 10)
+y = steps.cumsum() # compute the cumulative sum (the sum of all preceeding elements)
+print y
+\end{lstlisting}
 
-\subsection*{Tables.} 
+Executed, this program would display 
+\begin{lstlisting}
+[-1  0 -1 -2 -1 -2 -3 -2 -1 -2] # with `steps` being [-1 1 -1 -1  1 -1 -1  1  1 -1]
+\end{lstlisting}
 
-In this section you will find an example of a table using the \verb!table! plus the \verb!adjustwidth! environment and should give you a minimal example for tables in \LaTeX (Table \ref{tab1}).
-
-\begin{table}[!ht]
-\begin{adjustwidth}{-1.5in}{0in} % comment out/remove adjustwidth environment if table fits in text column.
-\centering
-\caption{{\bf Example Table.} This table demonstrates how to use the  adjustwidth environment if you need that tad bit of extra width for your figures or tables.}
-\begin{tabular}{|l|l|l|l|l|l|l|}
-\hline
-\multicolumn{4}{|l|}{\bf Heading 1} & \multicolumn{3}{|l|}{\bf Heading 2}\\ \hline
-cell 1 - row 1 & cell 2 - row 1 & cell 3 - row 1 & cell 4 - row 1 & cell 5 - row 1 & cell 6 - row 1 & cell 7 - row 1 \\ \hline
-cell 1 - row 2 & cell 2 - row 2 & cell 3 - row 2 & cell 4 - row 2 & cell 5 - row 2 & cell 6 - row 2 & cell 7 - row 2 \\ \hline
-cell 1 - row 3 & cell 2 - row 3 & cell 3 - row 3 & cell 4 - row 3 & cell 5 - row 3 & cell 6 - row 3 & cell 7 - row 3 \\ \hline
-\end{tabular}
-\label{tab1}
-\end{adjustwidth}
-\end{table}
-
-\paragraph{Paragraph.}
-Instead of adding more and more subsections you can use the \verb!\paragraph{}! command to give structure to your manuscript.
-
-\subsection*{Formulas.}
-For mathematical formulas you should use the math environment. See this example:
-
-\begin{center}
-$f(A_{ik},A_{jk}) = min(A_{ik},A_{jk}) - C_{1} max(A_{ik},A_{jk}) e^{-C_{2}min(A_{ik},A_{jk})}$
-\end{center}
-
-% newpage forces a page break if you want to clearly separate materials from results
-\newpage
-
-\section*{Results}
-\subsection*{Standard floating figures.}
-Figure \ref{fig2} is wrapped into a standard floating environment. That means that \LaTeX will determine the exact placement of the figure. Even though you can state preferences (see code) it can be tricky to get the right placement - especially when working on very tight manuscripts. If you want exact placement, add \verb!\usepackage{float}! to this file's header and use [H] in the figure environment's placement options.
+What could go wrong with such a simple program?\\
+\vfill
+Well...
+\vfill
 
 
-\begin{figure}[ht] %s state preferences regarding figure placement here
+% -------------------------
+\clearpage
+\section*{Re-runnable (R$^{\mathbf 1}$)}
 
-% use to correct figure counter if necessary
-%\renewcommand{\thefigure}{2}
+Did you ever wonder if you would be able to run a program you wrote some time
+ago? Let's consider a program you wrote yesterday. Most probably you can still
+run it today, but would this still be true in a week, in a month, in a year or
+in a decade? Probably you would legitimately answer positively for weeks
+or even months if you're optimistic, but you may have doubts when considering
+longer time periods such as years or even decades. Part of the problem is that
+computer science is evolving at a very fast pace and you cannot know how the
+system, the software and the libraries your program depends on will evolve.
+If you want your program to have a tiny chance to be runnable ten years from
+now, you better make it clear what are the dependencies in terms of systems,
+software and libraries.\\
+% TODO: cite Collberg 2014 study
+\cite{Collberg:2016}
 
-\includegraphics[width=\textwidth]{fig2.pdf}
+\begin{lstlisting}
+# A random walker (R1)
+# Tested with Python 3.6.0 / Numpy 1.12.0
+import numpy as np
 
-\caption{\color{Gray} \textbf{Example of a standard floating figure}. \textbf{A-F}, This figure is wrapped into the standard floating environment.}
+# Compute random walk for 10 steps
+steps = 2*(np.random.uniform(-1, +1, 10) > 0) - 1
+y = steps.cumsum()
+print(y)
+\end{lstlisting}
 
-\label{fig2} % \label works only AFTER \caption within figure environment
-
-\end{figure}
-
-\subsection*{Page break in figures.}
-The standard floating figures in \LaTeX do not cope well with page breaks which can make it difficult to fit in large figures. One way to deal with this is to separate figure and caption but \verb!\caption{}! might still give troubles at page breaks. Figure 3 demonstrates a way to manually set up figure and caption such that it continues onto the next page.
-\vspace{.5cm} % set vertical space between text and figure
-\begin{adjustwidth}{-2in}{0in}
-\begin{flushright}
-\includegraphics[width=163mm]{fig3.pdf}
-\end{flushright}
-\justify 
-\color{Gray}
-\textbf {Figure 3. Example of a wide figure with multi-page caption.}
-\textbf{A}, Proin lectus ex, venenatis vel ornare eget, hendrerit tempus justo. Pellentesque molestie purus sed pretium tincidunt. Curabitur facilisis, orci vitae mollis fringilla, elit erat fermentum justo, nec luctus nunc sapien vel dolor. Cras enim justo, ullamcorper ut commodo at, posuere et ex. Fusce cursus sapien id augue maximus convallis. Praesent egestas massa in enim volutpat varius. In aliquam turpis urna, at elementum turpis eleifend at. \textbf{B}, Proin risus erat, tincidunt quis massa non, sollicitudin congue metus. Aliquam quis magna vulputate, posuere est eu, tempor nisi. Cras gravida tempus felis, vitae lacinia lacus volutpat quis. Pellentesque et eros eu mi suscipit tempus. Proin in augue scelerisque. \textbf{C}, Donec a tempor tortor, et dignissim enim. Cras in ipsum sed velit bibendum imperdiet. Aenean aliquet mauris maximus, sodales ligula sit amet, placerat felis. In tristique nisi eu risus rutrum, ac lacinia lorem cursus. Nunc eget condimentum purus. Maecenas imperdiet nisl eu accumsan gravida. \textbf{D}, Nullam tincidunt, magna sed auctor ultrices, leo mi eleifend velit, quis varius ex diam non tellus. Nam tincidunt vehicula turpis, ut euismod turpis elementum vel.
-\end{adjustwidth}
+In our case, the R$^0$ version of our tiny walker uses the print {\em instruction} that is available in Python 2.x but has been deprecated in Python 3 in favor or a  print {\em function}.
+This means this program cannot be run with Python 3 and needs to be fixed.
+Since Python 2 will soon be discontinued, it may be best to target directly Python 3 and to use the print function (and as a matter of fact, it will work with Python 2).
+Another potential problem is the numpy `choice` function that has been introduced only in numpy v1.7.
+If for some reason, the installed version of numpy is older, the program will also fail.
+One quick fix is to use a simpler way to generate the steps (even if it is less efficient).
+Last and most important, we need to specify all the dependencies of our program.
 
 
-%\clearpage makes sure that all above content is printed at this point and does not invade into the upcoming content
-%\clearpage
+\clearpage
+\section*{Repeatable (R$^{\mathbf 2}$)}
 
-\section*{Discussion}
-\subsection*{Subsection heading.}
+After having taken care of specifying dependencies, you can legitimately hope to be able to run the program without too much trouble.
+However this does not guarantee you will get the same results at each run.
+For example, if you're using a (pseudo) random number generator, you have to take care of initializing the generator using a specific seed.
+If not, you're doomed and you won't be able to get twice the same output. But still, there are actually many more pitfalls ahead.
+For example, you can play with the seed value and find one that produce an interesting result that you will save in a file.
+And the, you can continue to play with the seed in order get new results.
+But what if you want to come back to one specific result?
+How do you find the seed related to this specific output?
+Again, if you did not foresee this potential problem, you're doomed.\\
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam bibendum finibus diam, gravida sagittis lorem gravida vitae. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla in diam tristique ante posuere tristique. Donec interdum purus sit amet nisl accumsan consectetur. Fusce aliquet libero mi, quis ornare dolor congue ullamcorper. Nulla nulla urna, molestie in urna sed, lacinia volutpat eros. Ut mi libero, elementum scelerisque ipsum vel, hendrerit fermentum turpis. Aliquam sit amet leo sodales, egestas augue id, fermentum nulla. Aenean vel cursus ante, et pellentesque eros. Nulla ac neque nec justo posuere commodo sit amet sit amet justo. Aliquam tincidunt tempor ex nec tincidunt. In ullamcorper vehicula lobortis. 
+Turning back to our random walker example, we can fix it quite easily by initializing the random number generator and produce a dictionary holding seed and result that allows us to reach the R² level.
 
-%\clearpage
+\begin{lstlisting}
+# A random walker (R2)
+# Tested with Python 3.6 / Numpy 1.12.0
+import numpy as np
 
-\section*{Supporting Information}
-If you intend to keep supporting files separately you can do so and just provide figure captions here. Optionally make clicky links to the online file using \verb!\href{url}{description}!.
+# Random generator initialization
+seed = 1
+np.random.seed(seed)
 
-%These commands reset the figure counter and add "S" to the figure caption (e.g. "Figure S1"). This is in case you want to add actual figures and not just captions.
-\setcounter{figure}{0}
-\renewcommand{\thefigure}{S\arabic{figure}}
+# Compute random walk for 10 steps
+steps = np.random.choice([-1,+1], 10)
+y = steps.cumsum()
+print(y)
+\end{lstlisting}
 
-% You can use the \nameref{label} command to cite supporting items in the text.
-\subsection*{S1 Figure}
-\label{example_label}
-{\bf Caption of Figure S1.} \textbf{A}, If you want to reference supporting figures in the text, use the \verb!\nameref{}!. command. This will reference the section's heading: \nameref{example_label}.
 
-\subsection*{S2 Video}
-\label{example_video}
-{\bf Example Video.} Use \href{www.youtube.com}{clicky links} to the online sources of the files.
+\clearpage
+\section*{Reproducible (R$^{\mathbf 3}$)}
 
-%\clearpage
+% Adding license for diffusion
+% Lorena Barba example (Science blog)
 
-\section*{Acknowledgments}
-We thank just about everybody.
+\begin{lstlisting}
+# A random walker (R3)
+# Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
+# Release under the BSD 2 clauses license
+# Tested with Python 3.6 / Numpy 1.12.0 using macOS 10.12.4 on a 64 bits architecture
+import numpy as np
 
-\nolinenumbers
+def walk(n):
+    """ Random walk for n steps """
 
-%This is where your bibliography is generated. Make sure that your .bib file is actually called library.bib
-\bibliography{library}
+    steps = 2*(np.random.uniform(-1,+1,n) > 0) - 1
+    return steps.cumsum()
 
-%This defines the bibliographies style. Search online for a list of available styles.
-\bibliographystyle{abbrv}
+if __name__ == '__main__'
+    # Unit test
+    np.random.seed(1)
+    assert walk(10) == [-1, 0, -1, -2, -3, -4, -5, -6, -7, -6]
+
+    # Random generator initialization
+    seed = 1
+    np.random.seed(seed)
+    
+    # Compute random walk for n steps
+    y = walk(n=10)
+
+    # Save and display results
+    results = {"seed": seed, "y": y}
+    print(results["y"])
+\end{lstlisting}
+
+
+\clearpage
+\section*{Replicable (R$^{\mathbf 4}$)}
+
+There are some discrepancies between the numpy and the pure Python version due to subtle differences in the random generator.
+As explained in the \href{https://docs.python.org/3.6/library/random.html}{Python documentation}, {\em Python uses the Mersenne Twister as the core generator. It produces 53-bit precision floats
+and has a period of 2**19937-1.
+The underlying implementation in C is both fast and threadsafe.}
+But the numpy random generator is also based on the same Mersenne Twister generator and the difference comes from the way seed is interpreted to initialize the generator.
+Fortunately, Python gives access to the internal state and we can {\em fix} it to make it match the behavior of the numpy generator (which is the default).
+
+\begin{lstlisting}
+# A random walker program (R4)
+# A replication of the random walker using pure Python
+# Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
+# Release under the BSD 2 clauses license
+# Tested with Python 3.6 using macOS 10.12.4 on a 64 bits architecture
+import random
+from itertools import accumulate
+
+def state(seed):
+    """ Compute the Mersenne Twister keys from given seed """
+    mt = [seed] * (624+1)
+    mt[-1] = 624
+    for i in range(1, 624):
+        mt[i] = int(0xFFFFFFFF & (1812433253 * (mt[i-1]^mt[i-1]>>30)+i))
+    return (3, tuple(mt), None)
+
+def walk(n=10):
+    """ Random walk for n steps """
+
+    steps = [-1 if random.uniform(-1,+1) < 0 else +1 for i in range(n)]
+    return list(accumulate(steps))
+
+if __name__ == '__main__'
+    # Unit test
+    random.setstate(state(seed=1))
+    assert walk(n=10) == [-1, 0, -1, -2, -3, -4, -5, -6, -7, -6]
+
+    # random generator initialization
+    seed = 1
+    random.setstate(state(seed))
+    
+    # Compute random walk for n steps
+    y = walk(n=10)
+    
+    # Save and display results
+    results = {"seed": seed, "y": y}
+    print(results["y"])
+\end{lstlisting}
+
+\clearpage
+\section*{Reusable (R$^{\mathbf 5}$)}
+
+\clearpage
+\section*{Conclusion}
+
+% underscore that compared to psy/bio/etc. the replication issues of CS are easily (reasonably) managed: good solutions that (mostly) works exist right now.
+
+\renewcommand*{\bibfont}{\small}
+\printbibliography[title=References]
+
 
 \end{document}
 
