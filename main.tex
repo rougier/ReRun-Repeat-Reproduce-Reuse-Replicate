@@ -22,22 +22,65 @@
 
 
 % Code Listing
-\usepackage[framemethod=tikz]{mdframed}
 \usepackage{listings}
-\surroundwithmdframed[
-%  hidealllines=true,
-  linewidth=0.25pt,
-  linecolor=black!50,
-  backgroundcolor=black!4,
-  innerleftmargin=8pt,
-  innertopmargin=3pt,
-  innerbottommargin=3pt]{lstlisting}
+\usepackage[framemethod=tikz]{mdframed}
+\makeatletter
+\def\mdf@@codeheading{Code Listings}
+\define@key{mdf}{title}{\def\mdf@@codeheading{#1}}
+\mdfdefinestyle{lstlisting}{%
+  backgroundcolor=black!2.5,
+  innertopmargin=2pt,
+  middlelinewidth=0.75pt,
+  outerlinewidth=9pt,
+  outerlinecolor=white,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  leftmargin=0pt,
+  rightmargin=0pt,
+  rightline=false,
+  leftline=false,
+  bottomline=false,
+  skipabove=\topskip,
+  skipbelow=\topskip,
+  roundcorner=0pt,
+  singleextra={
+    \node[text=black, % fill=white, draw,
+          anchor=south west, yshift=-0.25pt, xshift=5pt,
+          font=\sc\footnotesize] at (O|-P) {\csname mdf@@codeheading\endcsname};},
+  firstextra={
+    \node[text=black, % fill=white, draw,
+          anchor=south west, yshift=-0.5pt, xshift=5pt,
+          font=\sc\footnotesize] at (O|-P) {\csname mdf@@codeheading\endcsname};}
+}
+
 \lstset{ %
   basicstyle=\small\tt\linespread{0.75},
   language=Python,
   commentstyle=\color{gray},
   columns=fullflexible,
 }
+
+\lstnewenvironment{code}[2][]{%
+  \lstset{#1}%
+  \mdframed[style=lstlisting,title={#2}]%
+}{\endmdframed}
+
+
+%\usepackage{listings}
+%\surroundwithmdframed[
+%%  hidealllines=true,
+%  linewidth=0.25pt,
+%  linecolor=black!50,
+%  backgroundcolor=black!4,
+%  innerleftmargin=8pt,
+%  innertopmargin=3pt,
+%  innerbottommargin=3pt]{lstlisting}
+%\lstset{ %
+%  basicstyle=\small\tt\linespread{0.75},
+%  language=Python,
+%  commentstyle=\color{gray},
+%  columns=fullflexible,
+%}
 
 
 % Hyperref
@@ -67,32 +110,37 @@
 \begin{document}
 \maketitle
 
+
 % -------------------------
 \section*{Introduction (R$^{\mathbf 0}$)}
 
 Scientific reproducibility and replicability issues have received increased attention in the past few years and computer science is no exception.
 One could think that computer science would mostly be shielded from those issues. 
-But precisely because it is easy to believe that if a program runs once (and gives expected results) it will do so forever, crucial steps to transform working code into meaningful scientific contributions are rarely undertaken; computer science is victim of reproducibility and replicability issues precisely because it seems impervious to them.
+But precisely because it is easy to believe that if a program runs once (and gives expected results) it will do so forever, crucial steps to transform working code into meaningful scientific contributions are rarely undertaken; computer science is plagued by replication problems precisely because it seems impervious to them.\\
 
 In fact, a program can fail in many different ways at many different levels for many different reasons.
-Borrowing the terms coined by Ann Gobble, for your program to survive for some noticeable time, you have to make sure it is re-runnable, repeatable, reproducible, replicate and re-usable.\\
+Borrowing the terms coined by Carole Anne Gobble, for your program to survive for some noticeable time, you have to make sure it is re-runnable (R$^1$), repeatable (R$^2$), reproducible (R$^3$), replicable (R$^4$) and re-usable (R$^5$).\\
 
 Let us illustrate this with a very simple example, a random walk written in Python:
 
-\begin{lstlisting}
-# A random walker (R0)
-import numpy as np
+\begin{code}{Random walk (R$^0$)}
+# Random walk (R0: worst you can do)
+import random
 
-# randomly choose ten instances of either 1 or -1. 
-steps = np.random.choice([-1,+1], 10)
-y = steps.cumsum() # compute the cumulative sum (the sum of all preceeding elements)
-print y
-\end{lstlisting}
+x = 0
+for i in xrange(10):
+    step = random.choice([-1,+1])
+    x = x + step
+    print x,
+\end{code}
+% That would be too easy if the program was commented...
+% # randomly choose ten instances of either 1 or -1. 
+% # compute the cumulative sum (the sum of all preceeding elements)
 
 Executed, this program would display 
-\begin{lstlisting}
-[-1  0 -1 -2 -1 -2 -3 -2 -1 -2] # with `steps` being [-1 1 -1 -1  1 -1 -1  1  1 -1]
-\end{lstlisting}
+\begin{code}{Output}
+[-1  0 -1 -2 -1 -2 -3 -2 -1 -2] # with `steps` being [-1 +1 -1 -1 +1 -1 -1 +1 +1 -1]
+\end{code}
 
 What could go wrong with such a simple program?\\
 \vfill
@@ -104,33 +152,36 @@ Well...
 \clearpage
 \section*{Re-runnable (R$^{\mathbf 1}$)}
 
-Did you ever wonder if you would be able to run a program you wrote some time
-ago? Let's consider a program you wrote yesterday. Most probably you can still
-run it today, but would this still be true in a week, in a month, in a year or
-in a decade? Probably you would legitimately answer positively for weeks
-or even months if you're optimistic, but you may have doubts when considering
-longer time periods such as years or even decades. Part of the problem is that
-computer science is evolving at a very fast pace and you cannot know how the
-system, the software and the libraries your program depends on will evolve.
-If you want your program to have a tiny chance to be runnable ten years from
-now, you better make it clear what are the dependencies in terms of systems,
-software and libraries.\\
+Have you ever try to re-run a program you wrote some years ago? Frustratingly, it is often surprisingly hard. 
+Part of the problem is that computer science is evolving at a fast pace and you cannot know how the system, the software and the libraries your program depends on will evolve.
+Since you wrote the code, you may have changed your computer or your operating system. The compiler, interpreter or set of libraries installed may have changed or been upgraded. 
+You may find yourself battling with arcane issues of library compatibility---thoroughly orthogonal to your immediate research goals---to execute again a code \emph{that worked perfectly before}. 
+% "thoroughly orthogonal to your immediate research goals": possibly problematic
+
+To be clear, writing code that will run flawlessly months from now---without maintenance---is challenging. When considering years or decades, the best efforts can be stymied by the smallest changes, outside of the programmer's control. And modernizing a unmaintained ten-year-old code can reveal itself to be so complex and expensive that recreating the old execution environment is easier. For this however, the dependencies in terms of systems, software and libraries must be made clear enough.
+
+A \emph{re-runnable} code is one that describes an execution environment in which it is executable and produce the expected results with enough details to be recreated.
+
 % TODO: cite Collberg 2014 study
 \cite{Collberg:2016}
 
-\begin{lstlisting}
-# A random walker (R1)
-# Tested with Python 3.6.0 / Numpy 1.12.0
-import numpy as np
+\begin{code}{Random walk (R$^1$)}
+# Random walk (R2: re-runnable)
+# Tested with Python 3
+import random
+from itertools import accumulate
 
-# Compute random walk for 10 steps
-steps = 2*(np.random.uniform(-1, +1, 10) > 0) - 1
-y = steps.cumsum()
-print(y)
-\end{lstlisting}
+steps = random.choices([-1,+1], k=10)
+x = list(accumulate(steps))
+print(x) 
+\end{code}
 
-In our case, the R$^0$ version of our tiny walker uses the print {\em instruction} that is available in Python 2.x but has been deprecated in Python 3 in favor or a  print {\em function}.
-This means this program cannot be run with Python 3 and needs to be fixed.
+In our case, the R$^0$ version of our tiny walker seems to imply that any version of Python would be fine. This not the case for two reasons.
+
+First, the R$^0$ version uses the print {\em instruction} that is available in Python 2 (this widly used, and installed by default in many operating systems) but has been deprecated in Python 3 (the current version, first released in 2008, almost a decade ago) in favor or a  print {\em function}.
+This means that R$^0$ cannot be run with Python 3. 
+
+
 Since Python 2 will soon be discontinued, it may be best to target directly Python 3 and to use the print function (and as a matter of fact, it will work with Python 2).
 Another potential problem is the numpy `choice` function that has been introduced only in numpy v1.7.
 If for some reason, the installed version of numpy is older, the program will also fail.
@@ -153,57 +204,52 @@ Again, if you did not foresee this potential problem, you're doomed.\\
 
 Turning back to our random walker example, we can fix it quite easily by initializing the random number generator and produce a dictionary holding seed and result that allows us to reach the R² level.
 
-\begin{lstlisting}
-# A random walker (R2)
-# Tested with Python 3.6 / Numpy 1.12.0
-import numpy as np
+\begin{code}{Random walk (R$^2$)}
+# Random walk (R2: repeatable)
+# Tested with Python 3
+import random
+from itertools import accumulate
 
-# Random generator initialization
-seed = 1
-np.random.seed(seed)
+# Random number generator initialization
+random.seed(1)
 
 # Compute random walk for 10 steps
-steps = np.random.choice([-1,+1], 10)
-y = steps.cumsum()
-print(y)
-\end{lstlisting}
+steps = random.choices([-1,+1], k=10)
+x = list(accumulate(steps))
+print(x) 
+\end{code}
 
 
 \clearpage
 \section*{Reproducible (R$^{\mathbf 3}$)}
+As nicely explained by Mesnard and Barba \cite{Mesnard:2016}, reproducibility is harder than you may think.
 
 % Adding license for diffusion
 % Lorena Barba example (Science blog)
 
-\begin{lstlisting}
-# A random walker (R3)
+\begin{code}{Random walk (R$^3$)}
+# Random walk (R3: reproducible)
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
-# Release under the BSD 2 clauses license
-# Tested with Python 3.6 / Numpy 1.12.0 using macOS 10.12.4 on a 64 bits architecture
-import numpy as np
+# Release under the BSD 2-clause license
+# Tested with Python 3.6 / macOS 10.12.4 / 64 bits architecture
+import random
+from itertools import accumulate
 
 def walk(n):
     """ Random walk for n steps """
 
-    steps = 2*(np.random.uniform(-1,+1,n) > 0) - 1
-    return steps.cumsum()
+    steps = [-1 if random.uniform(-1,+1) < 0 else +1 for i in range(n)]
+    return list(accumulate(steps))
 
-if __name__ == '__main__'
+if __name__ == '__main__':
     # Unit test
-    np.random.seed(1)
-    assert walk(10) == [-1, 0, -1, -2, -3, -4, -5, -6, -7, -6]
+    random.seed(1)
+    assert walk(10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
 
-    # Random generator initialization
-    seed = 1
-    np.random.seed(seed)
-    
-    # Compute random walk for n steps
-    y = walk(n=10)
-
-    # Save and display results
-    results = {"seed": seed, "y": y}
-    print(results["y"])
-\end{lstlisting}
+    # Actual results
+    random.seed(2)
+    print(walk(10))
+\end{code}
 
 
 \clearpage
@@ -216,48 +262,86 @@ The underlying implementation in C is both fast and threadsafe.}
 But the numpy random generator is also based on the same Mersenne Twister generator and the difference comes from the way seed is interpreted to initialize the generator.
 Fortunately, Python gives access to the internal state and we can {\em fix} it to make it match the behavior of the numpy generator (which is the default).
 
-\begin{lstlisting}
-# A random walker program (R4)
-# A replication of the random walker using pure Python
+\begin{code}{Random walk (R$^4$)}
+# Random walk (R4: replicable)
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
-# Release under the BSD 2 clauses license
-# Tested with Python 3.6 using macOS 10.12.4 on a 64 bits architecture
+# Release under the BSD 2-clause license
+# Tested with Python 3.6 / Numpy 1.12.0 / macOS 10.12.4 / 64 bits architecture
 import random
-from itertools import accumulate
+import numpy as np
 
-def state(seed):
-    """ Compute the Mersenne Twister keys from given seed """
-    mt = [seed] * (624+1)
-    mt[-1] = 624
-    for i in range(1, 624):
-        mt[i] = int(0xFFFFFFFF & (1812433253 * (mt[i-1]^mt[i-1]>>30)+i))
-    return (3, tuple(mt), None)
-
-def walk(n=10):
+def walk(rng, n):
     """ Random walk for n steps """
 
-    steps = [-1 if random.uniform(-1,+1) < 0 else +1 for i in range(n)]
-    return list(accumulate(steps))
+    steps = 2*(rng.uniform(-1,+1,n) > 0) - 1
+    return steps.cumsum().tolist()
 
-if __name__ == '__main__'
+def rng(seed):
+    """ Return a random number generator initialized with seed """ 
+    
+    rng = random.Random()
+    rng.seed(seed)
+    _, keys, _ = rng.getstate()
+    rng = np.random.RandomState()
+    state = rng.get_state()
+    rng.set_state((state[0], keys[:-1], state[2], state[3], state[4]))
+    return rng
+
+if __name__ == '__main__':
     # Unit test
-    random.setstate(state(seed=1))
-    assert walk(n=10) == [-1, 0, -1, -2, -3, -4, -5, -6, -7, -6]
+    assert walk(rng(seed=1), 10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
 
-    # random generator initialization
-    seed = 1
-    random.setstate(state(seed))
-    
-    # Compute random walk for n steps
-    y = walk(n=10)
-    
-    # Save and display results
-    results = {"seed": seed, "y": y}
-    print(results["y"])
-\end{lstlisting}
+    # Actual results
+    print(walk(rng(seed=2), 10))
+\end{code}
 
 \clearpage
 \section*{Reusable (R$^{\mathbf 5}$)}
+
+\begin{code}{Random walk (R$^5$)}
+# Random walk (R5: re-usable)
+# Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
+# Release under the BSD 2-clause license
+# Tested with Python 3.6 / Numpy 1.12.0 / macOS 10.12.4 / 64 bits architecture
+import random
+import numpy as np
+
+def walk(rng, n):
+    """ Random walk for n steps """
+
+    steps = 2*(rng.uniform(-1,+1,n) > 0) - 1
+    return steps.cumsum().tolist()
+
+def rng(seed):
+    """ Return a random number generator initialized with seed """ 
+    
+    rng = random.Random()
+    rng.seed(seed)
+    _, keys, _ = rng.getstate()
+    rng = np.random.RandomState()
+    state = rng.get_state()
+    rng.set_state((state[0], keys[:-1], state[2], state[3], state[4]))
+    return rng
+    
+if __name__ == '__main__':
+    # Unit test
+    # assert walk(rng(seed=1), 10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+    
+    import argparse
+    parser = argparse.ArgumentParser("Random walk")
+    parser.add_argument('--seed', type=int, default=1,
+                        help='Seed for random number generator ')
+    parser.add_argument('n', type=int, default=10,
+                        help='Number of step(s) to walk')
+    args = parser.parse_args()
+
+    print("Seed:", args.seed)
+    print("Number of steps:", args.n)
+    print("Result:",  walk(rng(args.seed), args.n))
+\end{code}
+
+
+
 
 \clearpage
 \section*{Conclusion}
