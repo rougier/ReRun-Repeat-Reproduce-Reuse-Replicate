@@ -102,8 +102,11 @@
 \hypersetup{colorlinks=true}
 
 
+\title{Run Python, run!}
+% \title{Re-run, Repeat, Reproduce, Replicate, Re-use.}
+% \title{The R Quintuplet (R$^5$)}
 
-\title{The R Quintuplet (R$^5$)}
+
 \author{Nicolas P. Rougier and Fabien C. Y. Benureau}
 \date{\today}
 
@@ -114,17 +117,18 @@
 % -------------------------
 \section*{Introduction (R$^{\mathbf 0}$)}
 
-Scientific reproducibility and replicability issues have received increased attention in the past few years and computer science is no exception.
-One could think that computer science would mostly be shielded from those issues. 
-But precisely because it is easy to believe that if a program runs once (and gives expected results) it will do so forever, crucial steps to transform working code into meaningful scientific contributions are rarely undertaken; computer science is plagued by replication problems precisely because it seems impervious to them.\\
+Scientific reproducibility and replicability issues have received increased attention in the past few years and computer science is no exception \cite{Collberg:2016}.
+One could think that computer science would mostly be shielded from those issues.
+But precisely because it is easy to believe that if a program runs once and gives expected results it will do so forever, 
+crucial steps to transform working code into meaningful scientific contributions are rarely undertaken. 
+In other words, computer science is plagued by replication problems precisely because it seems impervious to them.\\
 
-In fact, a program can fail in many different ways at many different levels for many different reasons.
-Borrowing the terms coined by Carole Anne Gobble, for your program to survive for some noticeable time, you have to make sure it is re-runnable (R$^1$), repeatable (R$^2$), reproducible (R$^3$), replicable (R$^4$) and re-usable (R$^5$).\\
+In fact, a program can fail as a scientific object in many different ways for many different reasons.
+Borrowing the terms coined by Carole Goble \cite{Goble:2016}, for your program to survive for some noticeable time, you have to make sure it is re-runnable (R$^1$), repeatable (R$^2$), reproducible (R$^3$), replicable (R$^4$) and re-usable (R$^5$).\\
 
 Let us illustrate this with a very simple example, a random walk written in Python:
 
 \begin{code}{Random walk (R$^0$)}
-# Random walk (R0: worst you can do)
 import random
 
 x = 0
@@ -158,15 +162,11 @@ Since you wrote the code, you may have changed your computer or your operating s
 You may find yourself battling with arcane issues of library compatibility---thoroughly orthogonal to your immediate research goals---to execute again a code \emph{that worked perfectly before}. 
 % "thoroughly orthogonal to your immediate research goals": possibly problematic
 
-To be clear, writing code that will run flawlessly months from now---without maintenance---is challenging. When considering years or decades, the best efforts can be stymied by the smallest changes, outside of the programmer's control. And modernizing a unmaintained ten-year-old code can reveal itself to be so complex and expensive that recreating the old execution environment is easier. For this however, the dependencies in terms of systems, software and libraries must be made clear enough.
+To be clear, writing code that will run flawlessly months from now---without maintenance---is challenging. When considering years or decades, the best efforts can be stymied by the smallest changes, outside of the programmer's control. And modernizing a unmaintained ten-year-old code can reveal itself to be so complex and expensive that recreating the old execution environment is easier. For this to happen however, the dependencies in terms of systems, software and libraries must be made clear enough.
 
-A \emph{re-runnable} code is one that describes an execution environment in which it is executable and produce the expected results with enough details to be recreated.
-
-% TODO: cite Collberg 2014 study
-\cite{Collberg:2016}
+A \emph{re-runnable} code is one that describes an execution environment in which it is executable and produce the expected results with enough details to be recreated. As shown by Colberg and Proebsting \cite{Collberg:2016}, this is far from being neither obvious nor easy.
 
 \begin{code}{Random walk (R$^1$)}
-# Random walk (R2: re-runnable)
 # Tested with Python 3
 import random
 from itertools import accumulate
@@ -177,16 +177,10 @@ print(x)
 \end{code}
 
 In our case, the R$^0$ version of our tiny walker seems to imply that any version of Python would be fine. This not the case for two reasons.
-
 First, the R$^0$ version uses the print {\em instruction} that is available in Python 2 (this widly used, and installed by default in many operating systems) but has been deprecated in Python 3 (the current version, first released in 2008, almost a decade ago) in favor or a  print {\em function}.
-This means that R$^0$ cannot be run with Python 3. 
-
-
-Since Python 2 will soon be discontinued, it may be best to target directly Python 3 and to use the print function (and as a matter of fact, it will work with Python 2).
-Another potential problem is the numpy `choice` function that has been introduced only in numpy v1.7.
-If for some reason, the installed version of numpy is older, the program will also fail.
-One quick fix is to use a simpler way to generate the steps (even if it is less efficient).
-Last and most important, we need to specify all the dependencies of our program.
+This means that R$^0$ cannot be run with Python 3.  Second problem is the use of the {\tt xrange} operator that does not exist anymore in Python 3. It has been replaced by the ubiquituous {\tt range} operator.
+Since Python 2 will soon be discontinued, it may be best to target Python 3 and write a  new version that takes advantage of Python 3.
+Last and most important, we need to specify all the dependencies of our new program.
 
 
 \clearpage
@@ -194,41 +188,67 @@ Last and most important, we need to specify all the dependencies of our program.
 
 After having taken care of specifying dependencies, you can legitimately hope to be able to run the program without too much trouble.
 However this does not guarantee you will get the same results at each run.
-For example, if you're using a (pseudo) random number generator, you have to take care of initializing the generator using a specific seed.
-If not, you're doomed and you won't be able to get twice the same output. But still, there are actually many more pitfalls ahead.
-For example, you can play with the seed value and find one that produce an interesting result that you will save in a file.
-And the, you can continue to play with the seed in order get new results.
-But what if you want to come back to one specific result?
-How do you find the seed related to this specific output?
-Again, if you did not foresee this potential problem, you're doomed.\\
+For example, if you're using a (pseudo) random number generator (RNG), you have to take care of initializing the generator using a specific seed.
+If you don't do it, you won't be able to get twice the same output.
+But still, there are actually many more pitfalls ahead.
+For example, you can play with some parameters and find a specific set that produce interesting results that you save to a file.
+In the meantime, you continue playing with parameters in order get new results.
+But what if you want to come back to this one specific result you just saved? Did you save as well the set of parameters tied to this specific results? 
+This kind of situation happens quite regularly in the scientific literature \cite{Claerbout:2000} such that for some authors, it is virtually impossible to find the set of parameters that has been used to produce this or that figure.
+If you're note careful enough, this will happen to you as well.\\
 
-Turning back to our random walker example, we can fix it quite easily by initializing the random number generator and produce a dictionary holding seed and result that allows us to reach the R² level.
+Turning back to our random walk example, we can fix it quite easily by initializing the random number generator and reach the R² level.
 
 \begin{code}{Random walk (R$^2$)}
-# Random walk (R2: repeatable)
-# Tested with Python 3
+# Tested with Python 3.6
 import random
 from itertools import accumulate
 
 # Random number generator initialization
+seed = 1
 random.seed(1)
 
-# Compute random walk for 10 steps
+# Random walk for 10 steps
 steps = random.choices([-1,+1], k=10)
 x = list(accumulate(steps))
-print(x) 
+
+# Display & save results
+print(x)
+with open("results-R2-%d.txt" % seed, "w") as file:
+    file.write(str(x))
 \end{code}
 
 
 \clearpage
 \section*{Reproducible (R$^{\mathbf 3}$)}
-As nicely explained by Mesnard and Barba \cite{Mesnard:2016}, reproducibility is harder than you may think.
+As nicely explained by Mesnard and Barba \cite{Mesnard:2016}, reproducibility is harder than you think. 
+Making a program to run on a different machine (than your own) is neither easy nor straightforward.
+First, you need to take care of listing precisely all the dependencies of your program.
+Depending on its complexity, it might be sufficient.
+But in some case this won't be enough.
+The reason is that you when you listed your the dependencies, you probably only listed explicit or direct dependencies.
+Problem is that these dependencies have in turn some dependencies.
+Those constitutes the hidden, indirect or implicit dependencies.
+And for these new implicit dependencies, you can have again new implicit dependecies. Scary.
+But things can be even more complex because you potentially have much more to take into account.
+For example the system your program is running on, the CPU type and architecture (32 bits, 64 bits), the endianness, to name just a few.
+Last, but not least, you may have set defaults somewhere, someday and you may have completely forgotten you did so. Unfortunately, this can also affect the way your program is ran.
+
+%\begin{itemize}
+%\itemsep 0em
+%\item Python 3
+%\item Python 3.6
+%\item {Python 3.6.1 (default, Mar 28 2017, 10:33:50) \\
+%      {\tt [GCC 4.2.1 Compatible Apple LLVM 8.1.0 (clang-802.0.38)] on darwin}}
+%\item {Python 3.6.1 (default, Mar 28 2017, 10:33:50) \\
+%      {\tt [GCC 4.2.1 Compatible Apple LLVM 8.1.0 (clang-802.0.38)] on darwin}\\
+%      {\tt configuration variables: -std=c99 -Wextra -Wno-unused-result -Wno-unused-parameter -Wno-missing-field-initializers ...}}
+%\end{itemize}
 
 % Adding license for diffusion
 % Lorena Barba example (Science blog)
 
 \begin{code}{Random walk (R$^3$)}
-# Random walk (R3: reproducible)
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with Python 3.6 / macOS 10.12.4 / 64 bits architecture
@@ -246,24 +266,33 @@ if __name__ == '__main__':
     random.seed(1)
     assert walk(10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
 
-    # Actual results
-    random.seed(2)
-    print(walk(10))
+    # Random walk for 10 steps
+    seed = 1
+    random.seed(seed)
+    x = walk(10)
+    
+    # Display & save results
+    print(x)
+    with open("results-R3-%d.txt" % seed, "w") as file:
+        file.write(str(x))
 \end{code}
 
 
 \clearpage
 \section*{Replicable (R$^{\mathbf 4}$)}
 
-There are some discrepancies between the numpy and the pure Python version due to subtle differences in the random generator.
+As explained by Peng et al. \cite{Peng:2006}, {\em the replication of important findings by multiple independent investigators is fundamental to the accumulation of scientific evidence.}\\
+
+In our case, the replication of the random walk brings some unexpected discrepancies between the original Python version and the replicated Numpy version.
+The reason is that there exist some subtle differences in the respective implementations of the RNG.
 As explained in the \href{https://docs.python.org/3.6/library/random.html}{Python documentation}, {\em Python uses the Mersenne Twister as the core generator. It produces 53-bit precision floats
 and has a period of 2**19937-1.
 The underlying implementation in C is both fast and threadsafe.}
-But the numpy random generator is also based on the same Mersenne Twister generator and the difference comes from the way seed is interpreted to initialize the generator.
-Fortunately, Python gives access to the internal state and we can {\em fix} it to make it match the behavior of the numpy generator (which is the default).
+Numpy RNG is also based on the Mersenne Twister generator but there are differences in the way seed is interpreted when initializing the generator.
+Fortunately, Both Numpy and Python offer access to the internal state and we can {\em fix} it to make the behavior of one RNG to match the other RNG.
+Here, we want to make the Numpy RNG to match the Python RNG behvior.
 
 \begin{code}{Random walk (R$^4$)}
-# Random walk (R4: replicable)
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with Python 3.6 / Numpy 1.12.0 / macOS 10.12.4 / 64 bits architecture
@@ -291,15 +320,20 @@ if __name__ == '__main__':
     # Unit test
     assert walk(rng(seed=1), 10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
 
-    # Actual results
-    print(walk(rng(seed=2), 10))
+    # Random walk for 10 steps
+    seed = 1
+    x = walk(rng(seed=2), 10)
+
+    # Display & save results
+    print(x)
+    with open("results-R4-%d.txt" % seed, "w") as file:
+        file.write(str(x))
 \end{code}
 
 \clearpage
 \section*{Reusable (R$^{\mathbf 5}$)}
 
 \begin{code}{Random walk (R$^5$)}
-# Random walk (R5: re-usable)
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with Python 3.6 / Numpy 1.12.0 / macOS 10.12.4 / 64 bits architecture
@@ -322,11 +356,13 @@ def rng(seed):
     state = rng.get_state()
     rng.set_state((state[0], keys[:-1], state[2], state[3], state[4]))
     return rng
-    
+
+def test():
+    """ Unit tests """
+
+    return walk(rng(seed=1), 10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+
 if __name__ == '__main__':
-    # Unit test
-    # assert walk(rng(seed=1), 10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
-    
     import argparse
     parser = argparse.ArgumentParser("Random walk")
     parser.add_argument('--seed', type=int, default=1,
@@ -335,9 +371,18 @@ if __name__ == '__main__':
                         help='Number of step(s) to walk')
     args = parser.parse_args()
 
+    # Random walk for n steps
+    x = walk(rng(args.seed), args.n)
+
+    # Display & save results
     print("Seed:", args.seed)
     print("Number of steps:", args.n)
-    print("Result:",  walk(rng(args.seed), args.n))
+    print("Result:",  x)
+    with open("results-R5-%d.txt" % seed, "w") as file:
+        file.write("Version: R5")
+        file.write("Seed: %d" % args.seed)
+        file.write("Steps number: %d" % args.n)
+        file.write("Output: %s" % str(x))
 \end{code}
 
 
