@@ -46,11 +46,11 @@
   singleextra={
     \node[text=black, % fill=white, draw,
           anchor=south west, yshift=-0.25pt, xshift=5pt,
-          font=\sc\footnotesize] at (O|-P) {\csname mdf@@codeheading\endcsname};},
+          font=\footnotesize] at (O|-P) {\csname mdf@@codeheading\endcsname};},
   firstextra={
     \node[text=black, % fill=white, draw,
           anchor=south west, yshift=-0.5pt, xshift=5pt,
-          font=\sc\footnotesize] at (O|-P) {\csname mdf@@codeheading\endcsname};}
+          font=\footnotesize] at (O|-P) {\csname mdf@@codeheading\endcsname};}
 }
 
 \lstset{ %
@@ -102,8 +102,8 @@
 \hypersetup{colorlinks=true}
 
 
-\title{Run Python, run!}
-% \title{Re-run, Repeat, Reproduce, Replicate, Re-use.}
+\title{Re-run, Repeat, Reproduce, Replicate, Re-use:\\Transforming Code into Scientific Contributions}
+% \title{Run Python, run!}
 % \title{The R Quintuplet (R$^5$)}
 
 
@@ -113,28 +113,63 @@
 \begin{document}
 \maketitle
 
-
 % -------------------------
 \section*{Introduction (R$^{\mathbf 0}$)}
 
-Scientific reproducibility and replicability issues have received increased attention in the past few years and computer science is no exception \cite{Collberg:2016}.
-One could think that computer science would mostly be shielded from those issues.
-But precisely because it is easy to believe that if a program runs once and gives expected results it will do so forever, 
-crucial steps to transform working code into meaningful scientific contributions are rarely undertaken. 
-In other words, computer science is plagued by replication problems precisely because it seems impervious to them.\\
+Replication is a cornerstone of science. 
+% Since science aims to discover general principles of how the world functions, 
+% * <nicolas.rougier@inria.fr> 2017-04-24T15:49:43.902Z:
+% 
+% > Since science aims to discover general principles of how the world functions, 
+% 
+% 
+% C'est un peu une déclaration à l'emporte pièce et je soupçconne qu'il y a une littérature énorme sur la définition de la science. Et à moins de vouloir s'aliéner toute l'astophysioque et la cosmologie, on pourrait au minimum étendre à l'univers.
+% 
+% ^ <fabien.benureau+overleaf@gmail.com> 2017-04-25T13:29:01.309Z:
+% 
+% Reopened by editing the source!
+% From [wikipedia](https://en.wikipedia.org/wiki/World): "In a philosophical context, the world is the whole of the physical Universe, or an ontological world."
+% 
+% ^ <nicolas.rougier@inria.fr> 2017-04-25T13:45:04.565Z:
+%
+% Mouais.
+%
+% ^.
+If an experimental result cannot be obtained more than once,
+% it might be because of a fluke, a bias, a bug, a false positive or even a hack.
+%it becomes, at best, nothing more than food for thought for future research. 
+it merely becomes, at best, an observation that
+may feed future research. 
+Replication issues have received increased attention in recent years,
+in the domain of medicine and psychology in particular.
+One could think that computer science would mostly be shielded from such issues.
+But precisely because it is easy to believe that
+if a program runs once and gives expected results it will do so forever, 
+crucial steps to transform working code into meaningful scientific contributions are rarely undertaken \cite{Collberg:2016}. 
+In other words, computer science is plagued by replication problems,
+in part, precisely because it seems impervious to them.
 
-In fact, a program can fail as a scientific object in many different ways for many different reasons.
-Borrowing the terms coined by Carole Goble \cite{Goble:2016}, for your program to survive for some noticeable time, you have to make sure it is re-runnable (R$^1$), repeatable (R$^2$), reproducible (R$^3$), replicable (R$^4$) and re-usable (R$^5$).\\
+In fact, a program can fail as a scientific contribution
+in many different ways for many different reasons.
+Borrowing the terms coined by Carole Goble \cite{Goble:2016},
+for your program to survive for some noticeable time,
+you have to make sure it is
+re-runnable (R$^1$),
+repeatable (R$^2$),
+reproducible (R$^3$),
+replicable (R$^4$)
+and re-usable (R$^5$).\\
 
-Let us illustrate this with a very simple example, a random walk written in Python:
+Let us illustrate this with a very simple example,
+a random walk written in Python:
 
-\begin{code}{Random walk (R$^0$)}
+\begin{code}{\textbf{\textsc{Listing 1:}} Random walk (R$^0$)}
 import random
 
 x = 0
 for i in xrange(10):
     step = random.choice([-1,+1])
-    x = x + step
+    x += step
     print x,
 \end{code}
 % That would be too easy if the program was commented...
@@ -143,7 +178,7 @@ for i in xrange(10):
 
 Executed, this program would display 
 \begin{code}{Output}
-[-1  0 -1 -2 -1 -2 -3 -2 -1 -2] # with `steps` being [-1 +1 -1 -1 +1 -1 -1 +1 +1 -1]
+-1  0 -1 -2 -1 -2 -3 -2 -1 -2 # with the steps being -1, +1, -1, -1, +1, -1, -1, +1, +1, -1
 \end{code}
 
 What could go wrong with such a simple program?\\
@@ -156,83 +191,177 @@ Well...
 \clearpage
 \section*{Re-runnable (R$^{\mathbf 1}$)}
 
-Have you ever try to re-run a program you wrote some years ago? Frustratingly, it is often surprisingly hard. 
-Part of the problem is that computer science is evolving at a fast pace and you cannot know how the system, the software and the libraries your program depends on will evolve.
-Since you wrote the code, you may have changed your computer or your operating system. The compiler, interpreter or set of libraries installed may have changed or been upgraded. 
-You may find yourself battling with arcane issues of library compatibility---thoroughly orthogonal to your immediate research goals---to execute again a code \emph{that worked perfectly before}. 
+Have you ever try to re-run a program you wrote some years ago?
+Frustratingly, it can often be surprisingly hard. 
+Part of the problem is that technology is evolving at a fast pace
+and you cannot  know in advance
+how the system, the software and the libraries your program depends on will evolve.
+Since you wrote the code,
+you may have changed your computer or your operating system.
+The compiler, interpreter or set of libraries installed may have changed or been upgraded. 
+You may find yourself battling with
+arcane issues of library compatibility---thoroughly orthogonal to your immediate research goals---to execute again a code \emph{that worked perfectly before}. 
 % "thoroughly orthogonal to your immediate research goals": possibly problematic
 
-To be clear, writing code that will run flawlessly months from now---without maintenance---is challenging. When considering years or decades, the best efforts can be stymied by the smallest changes, outside of the programmer's control. And modernizing a unmaintained ten-year-old code can reveal itself to be so complex and expensive that recreating the old execution environment is easier. For this to happen however, the dependencies in terms of systems, software and libraries must be made clear enough.
+To be clear, it is impossible to write future-proof code,
+as the best efforts can be stymied by the smallest change in one of the dependencies.
+On the other hand, modernizing an unmaintained ten-year-old code
+can reveal itself to be an difficult and expensive undertaking,
+with each change risking to affect the semantics of the program.
+In fact, recreating the old execution environment
+might be easier.
+For this to happen however,
+the dependencies in terms of systems, software and libraries
+must be made clear enough.
 
-A \emph{re-runnable} code is one that describes an execution environment in which it is executable and produce the expected results with enough details to be recreated. As shown by Colberg and Proebsting \cite{Collberg:2016}, this is far from being neither obvious nor easy.
+A \emph{re-runnable} code is one that describes
+an execution environment in which it is executable
+and produce the expected results with enough details to be recreated.
+As shown by Colberg and Proebsting \cite{Collberg:2016},
+this is far from being neither obvious nor easy.
 
-\begin{code}{Random walk (R$^1$)}
+% if using random.choices, won't be runnable with anything <3.6
+% if using itertools.accumulate, won't be runnable with anything <3.2
+% although perhaps not the best syntax, we might want to keep the
+% import mod
+% mod.function 
+% syntax for both random and intertools
+%
+% Problem with current code is that it is highly inefficient now (compared to R0)
+\begin{code}{\textbf{\textsc{Listing 2:}} Random walk (R$^1$)}
 # Tested with Python 3
 import random
-from itertools import accumulate
 
-steps = random.choices([-1,+1], k=10)
-x = list(accumulate(steps))
-print(x) 
+walk, total = [], 0
+for i in range(10):
+    step = random.choice([-1,+1])     
+    total += step
+    walk.append(total)
+    
+print(walk)
 \end{code}
 
-In our case, the R$^0$ version of our tiny walker seems to imply that any version of Python would be fine. This not the case for two reasons.
-First, the R$^0$ version uses the print {\em instruction} that is available in Python 2 (this widly used, and installed by default in many operating systems) but has been deprecated in Python 3 (the current version, first released in 2008, almost a decade ago) in favor or a  print {\em function}.
-This means that R$^0$ cannot be run with Python 3.  Second problem is the use of the {\tt xrange} operator that does not exist anymore in Python 3. It has been replaced by the ubiquituous {\tt range} operator.
-Since Python 2 will soon be discontinued, it may be best to target Python 3 and write a  new version that takes advantage of Python 3.
-Last and most important, we need to specify all the dependencies of our new program.
+In our case, the R$^0$ version of our tiny walker seems to imply
+that any version of Python would be fine.
+This not the case for two reasons.
+First, the R$^0$ version uses the print {\em instruction}
+that is available in Python 2 (widely used, and installed by default in many operating systems)
+but has been deprecated in Python 3 (first released in 2008, almost a decade ago)
+in favor or a  print {\em function}.
+This means that R$^0$ cannot be run with Python 3.
+Second problem is the use of the {\tt xrange} operator
+that does not exist anymore in Python 3.
+It has been replaced by the ubiquituous {\tt range} operator.
+Since Python 2 is on its way out,
+it may be best to target Python 3, as we do in the R$^1$ version.
+Incidentally, it remains compatible with Python 2.
+
+But whatever the version of the dependencies chosen,
+the crucial step here is to document it.
 
 
 \clearpage
 \section*{Repeatable (R$^{\mathbf 2}$)}
 
-After having taken care of specifying dependencies, you can legitimately hope to be able to run the program without too much trouble.
-However this does not guarantee you will get the same results at each run.
-For example, if you're using a (pseudo) random number generator (RNG), you have to take care of initializing the generator using a specific seed.
-If you don't do it, you won't be able to get twice the same output.
-But still, there are actually many more pitfalls ahead.
-For example, you can play with some parameters and find a specific set that produce interesting results that you save to a file.
-In the meantime, you continue playing with parameters in order get new results.
-But what if you want to come back to this one specific result you just saved? Did you save as well the set of parameters tied to this specific results? 
-This kind of situation happens quite regularly in the scientific literature \cite{Claerbout:2000} such that for some authors, it is virtually impossible to find the set of parameters that has been used to produce this or that figure.
-If you're note careful enough, this will happen to you as well.\\
+% * <fabien.benureau+overleaf@gmail.com> 2017-04-27T06:18:15.753Z:
+% 
+% - 
+% 
+% Ok, so I am not sure that the parameter talk should be here. It should be in reproducible. 
+% 
+% ^.
 
-Turning back to our random walk example, we can fix it quite easily by initializing the random number generator and reach the R² level.
+The code is running and producing the expected results. 
+The next step is to make sure that you can produce the same output over successive runs of your program, 
+should you want to. 
+In other words, the next step is to make your program deterministic, 
+producing {\em repeatable} output. 
 
-\begin{code}{Random walk (R$^2$)}
-# Tested with Python 3.6
+Such repeatability is useful. 
+If a run of the program produces a particularly puzzling results, 
+it allows you to scrutinize any step of the execution of the program by re-running it again. 
+It is also the easiest way to prove that your program did indeed produce the results you published.
+
+Such repeatability is not always possible or easy \cite{Diethelm:2012}. But for sequential programs not depending on exotic hardware, it often comes down to controlling the initialization of the pseudo-random number generators (RNG). 
+
+For our program, that means setting the seed of the {\tt random}  module. We may also want to save the output of the program to a file, so that we can easily verify that consecutive runs do produce the same output; eyeballing differences is time-consuming (and therefore won't be done systematically) and unreliable.
+
+\begin{code}{\textbf{\textsc{Listing 3:}} Random walk (R$^2$)}
+# Tested with Python 3
 import random
-from itertools import accumulate
 
-# Random number generator initialization
-seed = 1
-random.seed(1)
+random.seed(0) # RNG initialization
 
-# Random walk for 10 steps
-steps = random.choices([-1,+1], k=10)
-x = list(accumulate(steps))
-
-# Display & save results
-print(x)
-with open("results-R2-%d.txt" % seed, "w") as file:
+walk, total = [], 0
+for i in range(10):
+    step = random.choice([-1,+1])     
+    total += step
+    walk.append(total)
+    
+print(walk)
+with open("results.txt", "w") as file: # Saving output to disk
     file.write(str(x))
 \end{code}
+
+Setting seeds is not without danger. 
+Using 439 as a seed in the previous program would result in ten consecutive +1 steps, which---although a perfectly valid random walk---lend itself to gross misinterpretations of the overall dynamic of the algorithm. 
+Verifying that the qualitative aspects of the results and the conclusion we make are not tied to a specific initialization of the pseudo-random generator is an integral part of any scientific undertaking in computational science; 
+this is usually done by repeating the simulations multiple times with different seeds.  
+
+Determinism is a tool that allow to study bugs and spurious or unexpected behavior. 
+Determinism is also critical for other to reproduce and study your results. 
+% talk about controversy about setting seeds
+
+% After having taken care of specifying dependencies,
+% you can legitimately hope to be able to
+% run the program without too much trouble.
+% However this does not guarantee
+% you will get the same results at each run.
+% For example, if you're using a (pseudo) random number generator (RNG),
+% you have to take care of initializing the generator using a specific seed.
+% If you don't do it, you won't be able to get twice the same output.
+% But still, there are actually many more pitfalls ahead.
+% For example, you can play with some parameters and
+% find a specific set that produce interesting results that you save to a file.
+% In the meantime, you continue playing with parameters in order get new results.
+% But what if you want to come back to this one specific result you just saved?
+% Did you save as well the set of parameters tied to this specific results? 
+% This kind of situation happens quite regularly in the scientific literature \cite{Claerbout:2000} 
+% such that in some case, it is virtually impossible
+% to find the set of parameters that has been used to produce this or that figure.
+% If you're note careful enough, this will happen to you as well.\\
 
 
 \clearpage
 \section*{Reproducible (R$^{\mathbf 3}$)}
-As nicely explained by Mesnard and Barba \cite{Mesnard:2016}, reproducibility is harder than you think. 
-Making a program to run on a different machine (than your own) is neither easy nor straightforward.
+
+The R$^2$ code seems fine enough, but it hides several problems that come to light when trying to {\em reproduce} results. In the strongest sense, a code is said to be {\em reproducible} if the same results it produced in the past can be re-obtained.  
+
+As nicely explained by Mesnard and Barba \cite{Mesnard:2016}, 
+reproducibility is harder than you think. 
+Making a program to run on a machine different from your own
+is neither easy nor straightforward.
 First, you need to take care of listing precisely all the dependencies of your program.
 Depending on its complexity, it might be sufficient.
 But in some case this won't be enough.
-The reason is that you when you listed your the dependencies, you probably only listed explicit or direct dependencies.
+The reason is that you when you listed your the dependencies,
+you probably only listed explicit or direct dependencies.
 Problem is that these dependencies have in turn some dependencies.
 Those constitutes the hidden, indirect or implicit dependencies.
-And for these new implicit dependencies, you can have again new implicit dependecies. Scary.
-But things can be even more complex because you potentially have much more to take into account.
-For example the system your program is running on, the CPU type and architecture (32 bits, 64 bits), the endianness, to name just a few.
-Last, but not least, you may have set defaults somewhere, someday and you may have completely forgotten you did so. Unfortunately, this can also affect the way your program is ran.
+And for each of these implicit dependencies, 
+you can have of course new explicit and implicit dependencies.
+Scary!
+
+But things can be even more complex because
+you potentially have much more to take into account such as for example
+the system your program is running on, 
+the CPU type and architecture (e.g. 32 bits or 64 bits),
+the endianness,
+to name just a few.
+Last, but not least,
+you may have set defaults somewhere, someday
+and you may have completely forgotten you did so.
+Unfortunately, this can also affect the way your program is ran.
 
 %\begin{itemize}
 %\itemsep 0em
@@ -248,7 +377,7 @@ Last, but not least, you may have set defaults somewhere, someday and you may ha
 % Adding license for diffusion
 % Lorena Barba example (Science blog)
 
-\begin{code}{Random walk (R$^3$)}
+\begin{code}{\textbf{\textsc{Listing 4:}} Random walk (R$^3$)}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with Python 3.6 / macOS 10.12.4 / 64 bits architecture
@@ -292,7 +421,7 @@ Numpy RNG is also based on the Mersenne Twister generator but there are differen
 Fortunately, Both Numpy and Python offer access to the internal state and we can {\em fix} it to make the behavior of one RNG to match the other RNG.
 Here, we want to make the Numpy RNG to match the Python RNG behvior.
 
-\begin{code}{Random walk (R$^4$)}
+\begin{code}{\textbf{\textsc{Listing 5:}} Random walk (R$^4$)}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with Python 3.6 / Numpy 1.12.0 / macOS 10.12.4 / 64 bits architecture
@@ -333,7 +462,19 @@ if __name__ == '__main__':
 \clearpage
 \section*{Reusable (R$^{\mathbf 5}$)}
 
-\begin{code}{Random walk (R$^5$)}
+Re-usable means your program can be used by people outside your lab,
+possibly using different environment, different parameters or different data.
+If people start using your program,
+they will most likely report bugs or malfunctions.
+And if you're lucky, they will even propose fixes.
+In other words, if your program is re-usable and is re-used, it is alive.
+As such and as for any other living being,
+it will evolve and mutate to adapt to its environment.
+This process will ensure long-term reproducibility
+to the extent people continue using and maintaining the program.
+
+
+\begin{code}{\textbf{\textsc{Listing 6:}} Random walk (R$^5$)}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with Python 3.6 / Numpy 1.12.0 / macOS 10.12.4 / 64 bits architecture
@@ -349,12 +490,8 @@ def walk(rng, n):
 def rng(seed):
     """ Return a random number generator initialized with seed """ 
     
-    rng = random.Random()
-    rng.seed(seed)
-    _, keys, _ = rng.getstate()
     rng = np.random.RandomState()
-    state = rng.get_state()
-    rng.set_state((state[0], keys[:-1], state[2], state[3], state[4]))
+	rng.seed(seed)
     return rng
 
 def test():
