@@ -1,4 +1,117 @@
--
+\documentclass[a4paper,11pt]{article}
+
+% Wider margins (compared to default)
+\usepackage[margin=2.5cm]{geometry}
+
+% English support (typography and hyphenation)
+\usepackage[english]{babel}
+
+% Unicode encoding
+\usepackage[utf8]{inputenc}
+
+% Better default font (Libertine and Inconsolata)
+\usepackage[ttscale=.875]{libertine}
+\usepackage[scaled=0.96]{zi4}
+
+% Biber
+\usepackage[backend=biber, style=numeric, natbib=true]{biblatex}
+\bibliography{library.bib}
+
+% Graphics
+\usepackage{graphicx}
+
+
+% Code Listing
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+\makeatletter
+\def\mdf@@codeheading{Code Listings}
+\define@key{mdf}{title}{\def\mdf@@codeheading{#1}}
+\mdfdefinestyle{lstlisting}{%
+  backgroundcolor=black!2.5,
+  innertopmargin=2pt,
+  middlelinewidth=0.75pt,
+  outerlinewidth=9pt,
+  outerlinecolor=white,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  leftmargin=0pt,
+  rightmargin=0pt,
+  rightline=false,
+  leftline=false,
+  bottomline=false,
+  skipabove=\topskip,
+  skipbelow=\topskip,
+  roundcorner=0pt,
+  singleextra={
+    \node[text=black, % fill=white, draw,
+          anchor=south west, yshift=-0.25pt, xshift=5pt,
+          font=\footnotesize] at (O|-P) {\csname mdf@@codeheading\endcsname};},
+  firstextra={
+    \node[text=black, % fill=white, draw,
+          anchor=south west, yshift=-0.5pt, xshift=5pt,
+          font=\footnotesize] at (O|-P) {\csname mdf@@codeheading\endcsname};}
+}
+
+\lstset{ %
+  basicstyle=\small\tt\linespread{0.75},
+  language=Python,
+  commentstyle=\color{gray},
+  columns=fullflexible,
+}
+
+\lstnewenvironment{code}[2][]{%
+  \lstset{#1}%
+  \mdframed[style=lstlisting,title={#2}]%
+}{\endmdframed}
+
+
+%\usepackage{listings}
+%\surroundwithmdframed[
+%%  hidealllines=true,
+%  linewidth=0.25pt,
+%  linecolor=black!50,
+%  backgroundcolor=black!4,
+%  innerleftmargin=8pt,
+%  innertopmargin=3pt,
+%  innerbottommargin=3pt]{lstlisting}
+%\lstset{ %
+%  basicstyle=\small\tt\linespread{0.75},
+%  language=Python,
+%  commentstyle=\color{gray},
+%  columns=fullflexible,
+%}
+
+
+% Hyperref
+\usepackage{xcolor}
+\definecolor{blendedblue}{rgb}{0.2, 0.2, 0.6}
+\definecolor{blendedred}{rgb}{0.8, 0.2, 0.2}
+\usepackage[bookmarks=true,
+            breaklinks=true,
+            pdfborder={0 0 0},
+            citecolor=blendedblue,
+            colorlinks=true,
+            linkcolor=blendedblue,
+            urlcolor=blendedblue,
+            citecolor=blendedblue,
+            linktocpage=false,
+            hyperindex=true,
+            linkbordercolor=white]{hyperref}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true}
+
+
+\title{Re-run, Repeat, Reproduce, Replicate, Re-use:\\Transforming Code into Scientific Contributions}
+% \title{Run Python, run!}
+% \title{The R Quintuplet (R$^5$)}
+
+
+\author{Nicolas P. Rougier and Fabien C. Y. Benureau}
+\date{\today}
+
+\begin{document}
+\maketitle
 % -------------------------
 \section*{Introduction (R$^{\mathbf 0}$)}
 
