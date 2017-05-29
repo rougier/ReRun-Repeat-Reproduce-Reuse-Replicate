@@ -4,7 +4,8 @@
 \usepackage[margin=2.5cm]{geometry}
 
 % English support (typography and hyphenation)
-\usepackage[english]{babel}
+\usepackage[american]{babel}
+\usepackage{csquotes}
 
 % Unicode encoding
 \usepackage[utf8]{inputenc}
@@ -14,7 +15,13 @@
 \usepackage[scaled=0.96]{zi4}
 
 % Biber
-\usepackage[backend=biber, style=numeric, natbib=true]{biblatex}
+\usepackage[backend=biber,
+            style=apa,
+            maxcitenames=3,
+            maxbibnames=99,
+            apamaxprtauth=99,	
+            natbib=true]{biblatex}
+\DeclareLanguageMapping{american}{american-apa}
 \bibliography{library.bib}
 
 % Graphics
@@ -102,7 +109,7 @@
 \hypersetup{colorlinks=true}
 
 
-\title{Re-run, Repeat, Reproduce, Replicate, Re-use:\\Transforming Code into Scientific Contributions}
+\title{Re-run, Repeat, Reproduce, Re-use, Replicate:\\Transforming Code into Scientific Contributions}
 % \title{Run Python, run!}
 % \title{The R Quintuplet (R$^5$)}
 
@@ -115,7 +122,8 @@
 % -------------------------
 \section*{Introduction (R$^{\mathbf 0}$)}
 
-Replication is a cornerstone of science. 
+%Replication is a cornerstone of science. 
+Reproducibility is a cornerstone of science. 
 % Since science aims to discover general principles of how the world functions, 
 % * <nicolas.rougier@inria.fr> 2017-04-24T15:49:43.902Z:
 % 
@@ -144,20 +152,20 @@ in the domain of medicine and psychology in particular.
 One could think that computer science would mostly be shielded from such issues.
 But precisely because it is easy to believe that
 if a program runs once and gives expected results it will do so forever, 
-crucial steps to transform working code into meaningful scientific contributions are rarely undertaken \cite{Collberg:2016}. 
+crucial steps to transform working code into meaningful scientific contributions are rarely undertaken \citep{Collberg:2016}. 
 Computer science is plagued by replication problems,
 in part, precisely because it seems impervious to them.
 
 In fact, a program can fail as a scientific contribution
 in many different ways for many different reasons.
-Borrowing the terms coined by Carole Goble \cite{Goble:2016},
+Borrowing the terms coined by \citeauthor{Goble:2016} \citep{Goble:2016},
 for your program to contribute to Science,
 you have to make sure it is
 re-runnable (R$^1$),
 repeatable (R$^2$),
 reproducible (R$^3$),
-replicable (R$^4$)
-and re-usable (R$^5$).\\
+re-usable (R$^4$)
+and replicable (R$^5$).\\
 
 Let us illustrate this with a very simple example,
 a random walk written in Python:
@@ -210,14 +218,11 @@ with each change risking to affect the semantics of the program.
 
 Rather trying to predict the future or painstakingly dusting off old code, 
 an often easier solution is to recreate the old execution environment.
-For this to happen however,
-the dependencies in terms of systems, software and libraries
-must be made clear enough.
+For this to happen however, 
+the dependencies in terms of systems, software and libraries must be made clear enough.
 
-A \emph{re-runnable} code is one that describes
-an execution environment in which it is executable with enough details to be recreated.
-As shown by Collberg and Proebsting \cite{Collberg:2016},
-this is far from being neither obvious nor easy.
+A \emph{re-runnable} code is one that describes an execution environment in which it is executable with enough details to be recreated.
+As shown by \citep{Collberg:2016}, this is far from being neither obvious nor easy.
 
 % * <fabien.benureau+overleaf@gmail.com> 2017-05-08T18:09:47.037Z:
 % 
@@ -327,10 +332,9 @@ this is usually done by repeating the simulations multiple times with different 
 
 The R$^2$ code seems fine enough, 
 but it hides several problems that come to light when trying to {\em reproduce} results.
-In the strongest sense,
-a code is said to be {\em reproducible}
-if the same results it produced in the past can be re-obtained by someone else. As explained by Mesnard and Barba \cite{Mesnard:2016}, 
-reproducibility is harder than you think. 
+In the strongest sense, a code is said to be {\em reproducible}
+if the same results it produced in the past can be re-obtained by someone else.
+As explained by \citeauthor{Mesnard:2016} \citep{Mesnard:2016}, reproducibility is harder than you think. 
 
 For instance, our R$^2$ program will not produce the same results for everyone. It will, because it is repeatable, produce the same results over repeated executions. But it will not do so over different execution environments. The cause is found in a change that occurred in the pseudo-random number generator between CPython 3.2 and CPython 3.3. 
 
@@ -383,19 +387,98 @@ if __name__ == '__main__':
         file.write(str(x))
 \end{code}
 
-Finally, a crucial condition to making a code reproducible is making it available. As shown in \cite{Collberg:2016}, code is often not available, or available upon request. The latter may seem sufficient, but changes in email address,  career or retirement can make the code just as unavailable. Code \emph{and input and result files} should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as Figshare or Zenodo.
+Finally, a crucial condition to making a code reproducible is making it available. As shown in \citep{Collberg:2016}, code is often not available, or available upon request. The latter may seem sufficient, but changes in email address,  career or retirement can make the code just as unavailable. Code \emph{and input and result files} should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as Figshare or Zenodo.
 
 Providing results files is important: it allows other researchers to easily compare the results they obtains with the one used to generate the figure in the article. Comparing figures directly can be cumbersome and often only allows to conclude about a qualitative similarity.
 
 To recap, reproducibility imposes stronger conditions than re-runnability. Dependencies and platforms must be described as precisely and a specifically as possible. Unit tests are a good way to embed self-diagnostics of reproducibility in the code. Results must be accompanied with the parameters and inputs used to produce them. And the code, and the data files behind the figure must be made available. 
 
-\clearpage
-\section*{Replicable (R$^{\mathbf 4}$)}
 
-As explained by Peng et al. \cite{Peng:2006}, {\em the replication of important findings by multiple independent investigators is fundamental to the accumulation of scientific evidence}. Replicability is the assumption that any article that does not provide the code source makes: that the description it provides of the algorithms is sufficiently precise and complete to re-obtain the results it presents.
+\clearpage
+\section*{Reusable (R$^{\mathbf 4}$)}
+
+Making your program re-usable means it can be used by people outside your lab,
+using possibly different environment, different parameters or different data.
+If people start using your program, they will most likely report bugs or malfunctions they encountered while using your program.
+If you're lucky enough, they will even propose you bugfix, hence improving the overall quality and correctness of your software.
+In other words, if your program is re-usable and is re-used, it is alive.
+As such, and as for any other living being, it will evolve and mutate to adapt to its environment.
+This process will ensure long-term reproducibility to the extent people continue using and maintaining the program.\\
+
+However, making your program to be re-usable by others requires a little work. If it is natural, when one writes a program for oneself, to make implicit choices that suit one needs, such implicit choices won't resist the will of a user community. For example, having magic numbers or ill-defined constants in your program might be cumbersome for others. Similarly, it might be acceptable to not have a proper documentation when you're the only user (actually it might not be acceptable because the you now and the you in six months are two different persons), but other users want to know precisely how to use this or that function and what it does exactly.\\
+
+
+If we look back at our random walker, we can list all the implicit choices that have been made:
+\begin{itemize}
+\item Step number has been hard-coded (magic number 10)
+\item Step size has been fixed to 1
+\item Initial position has been set to 0
+\item No possibility of using a user-specified random seed
+\item Only one run can be started at once
+\item Walker walk along a single dimension
+\item ...
+\end{itemize}
+However, we won't try to implement all these features at once, but only giving the possibility for a user to implement them if needed.
+
+
+\begin{code}{\textbf{\textsc{Listing 6:}} Random walk (R$^5$)}
+# Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
+# Release under the BSD 2-clause license
+# Tested with Python 3.6 / Numpy 1.12.0 / macOS 10.12.4 / 64 bits architecture
+import random
+import numpy as np
+
+def walk(rng, n):
+    """ Random walk for n steps """
+
+    steps = 2*(rng.uniform(-1,+1,n) > 0) - 1
+    return steps.cumsum().tolist()
+
+def rng(seed):
+    """ Return a random number generator initialized with seed """ 
+    
+    rng = np.random.RandomState()
+    rng.seed(seed)
+    return rng
+
+def test():
+    """ Unit tests """
+
+    return walk(rng(seed=1), 10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser("Random walk")
+    parser.add_argument('--seed', type=int, default=1,
+                        help='Seed for random number generator ')
+    parser.add_argument('n', type=int, default=10,
+                        help='Number of step(s) to walk')
+    args = parser.parse_args()
+
+    # Random walk for n steps
+    x = walk(rng(args.seed), args.n)
+
+    # Display & save results
+    print("Seed:", args.seed)
+    print("Number of steps:", args.n)
+    print("Result:",  x)
+    with open("results-R5-%d.txt" % seed, "w") as file:
+        file.write("Version: R5")
+        file.write("Seed: %d" % args.seed)
+        file.write("Steps number: %d" % args.n)
+        file.write("Output: %s" % str(x))
+\end{code}
+
+
+\clearpage
+\section*{Replicable (R$^{\mathbf 5}$)}
+
+Having made a software re-usable by others should offer a decent protection against bugs. Unfortunately, this is not always the case and some recent cases have demonstrated the tremendous impact a bug can have in Science \citep{Eklund:2016} or in our every-day life \citep{Durumeric:2014}.
+This is why, as explained by Peng et al. \cite{Peng:2006}, {\em the replication of important findings by multiple independent investigators is fundamental to the accumulation of scientific evidence}.
+%Replicability is the assumption that any article that does not provide the code source makes: that the description it provides of the algorithms is sufficiently precise and complete to re-obtain the results it presents.
 
 In our case, the replication of the random walk brings some unexpected discrepancies between the original Python version and the replicated Numpy version.
-The reason is that there exist some subtle differences in the respective implementations of the RNG.
+The reason is to be found in a differences in the respective implementations of the RNG between Python and Numpy.
 As explained in the \href{https://docs.python.org/3.6/library/random.html}{Python documentation}, {\em Python uses the Mersenne Twister as the core generator. It produces 53-bit precision floats
 and has a period of 2**19937-1.
 The underlying implementation in C is both fast and threadsafe.}
@@ -441,71 +524,7 @@ if __name__ == '__main__':
         file.write(str(x))
 \end{code}
 
-\clearpage
-\section*{Reusable (R$^{\mathbf 5}$)}
-
-Re-usable means your program can be used by people outside your lab,
-possibly using different environment, different parameters or different data.
-If people start using your program,
-they will most likely report bugs or malfunctions.
-And if you're lucky, they will even propose fixes.
-In other words, if your program is re-usable and is re-used, it is alive.
-As such, and as for any other living being,
-it will evolve and mutate to adapt to its environment.
-This process will ensure long-term reproducibility
-to the extent people continue using and maintaining the program.
-
-
-\begin{code}{\textbf{\textsc{Listing 6:}} Random walk (R$^5$)}
-# Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
-# Release under the BSD 2-clause license
-# Tested with Python 3.6 / Numpy 1.12.0 / macOS 10.12.4 / 64 bits architecture
-import random
-import numpy as np
-
-def walk(rng, n):
-    """ Random walk for n steps """
-
-    steps = 2*(rng.uniform(-1,+1,n) > 0) - 1
-    return steps.cumsum().tolist()
-
-def rng(seed):
-    """ Return a random number generator initialized with seed """ 
-    
-    rng = np.random.RandomState()
-	rng.seed(seed)
-    return rng
-
-def test():
-    """ Unit tests """
-
-    return walk(rng(seed=1), 10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
-
-if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser("Random walk")
-    parser.add_argument('--seed', type=int, default=1,
-                        help='Seed for random number generator ')
-    parser.add_argument('n', type=int, default=10,
-                        help='Number of step(s) to walk')
-    args = parser.parse_args()
-
-    # Random walk for n steps
-    x = walk(rng(args.seed), args.n)
-
-    # Display & save results
-    print("Seed:", args.seed)
-    print("Number of steps:", args.n)
-    print("Result:",  x)
-    with open("results-R5-%d.txt" % seed, "w") as file:
-        file.write("Version: R5")
-        file.write("Seed: %d" % args.seed)
-        file.write("Steps number: %d" % args.n)
-        file.write("Output: %s" % str(x))
-\end{code}
-
-
-
+<
 
 \clearpage
 \section*{Conclusion}
