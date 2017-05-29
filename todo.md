@@ -1,5 +1,6 @@
 # Things To Do
 
+* Rework the R4 (re-usable) script
 * decide which badges we want to target on github.
 * provide clear definition of each of the Re* terms.
   → https://www.slideshare.net/carolegoble/what-is-reproducibility-gobleclean

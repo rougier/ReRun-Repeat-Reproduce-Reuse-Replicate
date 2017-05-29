@@ -20,3 +20,5 @@
 
 # R5: Re-usable
 * Github, Travis, Documentation, etc.
+* Remove implicit choices
+* Allow to use other data / parameters
