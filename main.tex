@@ -1,3 +1,4 @@
+% !TeX program = pdflatex
 \documentclass[a4paper,11pt]{article}
 
 % Wider margins (compared to default)
@@ -13,6 +14,13 @@
 % Better default font (Libertine and Inconsolata)
 \usepackage[ttscale=.875]{libertine}
 \usepackage[scaled=0.96]{zi4}
+
+%\usepackage{mathspec}
+%\setmainfont{Minion Pro Cond}
+%\setmathsfont(Digits,Greek,Latin)[Numbers={Proportional}]{Minion Pro}
+%\setmathrm{Minion Pro}
+%\setsansfont{MyriadPro-Cond}
+
 
 % Biber
 \usepackage[backend=biber,
@@ -146,15 +154,15 @@ If an experimental result cannot be obtained more than once,
 % it might be because of a fluke, a bias, a bug, a false positive or even a hack.
 %it becomes, at best, nothing more than food for thought for future research. 
 it merely becomes, at best, an observation that
-may feed future research. 
+may feed future research \cite{Mesirov:2010,osc:2015}. 
 Replication issues have received increased attention in recent years,
-in the domain of medicine and psychology in particular.
+in the domain of medicine and psychology in particular \cite{Iqbal:2016}.
 One could think that computer science would mostly be shielded from such issues.
 But precisely because it is easy to believe that
 if a program runs once and gives expected results it will do so forever, 
-crucial steps to transform working code into meaningful scientific contributions are rarely undertaken \citep{Collberg:2016}. 
+crucial steps to transform working code into meaningful scientific contributions are rarely undertaken \citep{Sandve:2013,Schwab:2000}. 
 Computer science is plagued by replication problems,
-in part, precisely because it seems impervious to them.
+in part, precisely because it seems impervious to them.\\
 
 In fact, a program can fail as a scientific contribution
 in many different ways for many different reasons.
@@ -281,7 +289,7 @@ In other words, the next step is to make your program deterministic,  producing 
 Such repeatability is useful. 
 If a run of the program produces a particularly puzzling results,  it allows you to scrutinize any step of the execution of the program by re-running it again. 
 It is also the easiest way to prove that the program did indeed produce the published results.
-Such repeatability is not always possible or easy \cite{Diethelm:2012}.
+Such repeatability is not always possible or easy \citep{Diethelm:2012, Courtes:2015}.
 But for sequential programs not depending on exotic hardware, it often comes down to controlling the initialization of the pseudo-random number generators (RNG).\\ 
 
 For our program, that means setting the seed of the {\tt random} module. We may also want to save the output of the program to a file, so that we can easily verify that consecutive runs do produce the same output; eyeballing differences is unreliable and  time-consuming (and therefore won't be done systematically).
@@ -466,9 +474,10 @@ if __name__ == '__main__':
 % \clearpage
 \section*{Replicable (R$^{\mathbf 5}$)}
 
-Having made a software re-usable by others should offer a decent protection against bugs. Unfortunately, this is not always the case and some recent cases have demonstrated the tremendous impact a bug can have in Science \citep{Eklund:2016} or in our every-day life \citep{Durumeric:2014}.
-This is why, as explained by Peng et al. \cite{Peng:2006}, {\em the replication of important findings by multiple independent investigators is fundamental to the accumulation of scientific evidence}.
-%Replicability is the assumption that any article that does not provide the code source makes: that the description it provides of the algorithms is sufficiently precise and complete to re-obtain the results it presents.
+Having made a software re-usable by others should offer a decent protection against bugs.
+Unfortunately, this is not always the case and some recent cases have demonstrated the tremendous impact a bug can have in Science \citep{Eklund:2016} or in our every-day life \citep{Durumeric:2014}.
+This is why, as explained by Peng et al. \cite{Peng:2006}, {\em the replication of important findings by multiple independent investigators is fundamental to the accumulation of scientific evidence}.\\
+% Replicability is the assumption that any article that does not provide the code source makes: that the description it provides of the algorithms is sufficiently precise and complete to re-obtain the results it presents.
 
 In our case, the replication of the random walk brings some unexpected discrepancies between the original Python version and the replicated Numpy version.
 The reason is to be found in a differences in the respective implementations of the RNG between Python and Numpy.
@@ -477,7 +486,10 @@ and has a period of 2**19937-1.
 The underlying implementation in C is both fast and threadsafe.}
 Numpy RNG is also based on the Mersenne Twister generator but there are differences in the way seed is interpreted when initializing the generator.
 Fortunately, Both Numpy and Python offer access to the internal state and we can {\em fix} it to make the behavior of one RNG to match the other RNG.
-Here, we want to make the Numpy RNG to match the Python RNG behvior.
+Here, we want to make the Numpy RNG to match the Python RNG behavior.\\
+
+Without such explicit replication effort, it would be very hard to discover this faulty behavior and this why the ReScience journal has been created.
+This journal targets computational research and encourages the explicit replication of already published research, promoting new and open-source implementations in order to ensure that the original research is reproducible.
 
 \begin{code}{\textbf{\textsc{Listing 6:}} Random walk (R$^5$)}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
@@ -522,7 +534,7 @@ if __name__ == '__main__':
 % \clearpage
 \section*{Conclusion}
 
-Using a very simple random walk example using Python, we've seen a variety of pitfalls of writing scientific code. The R$^0$ form, while easy to write and simple to understand is not a good scientific code while the full-fledge R$^{4}$ form is much preferred but requires a fair amount of work that might be unacceptable in some circumstances. $R^3$ form seems to be an acceptable compromise and should be accepted as the minimum scientific standard. This means this should be actually checked by reviewers and publishers when code is part of a work worth to be published. But it's hardly the case today.\\
+Through a very simple random walk example using Python, we've seen a variety of pitfalls of writing scientific code. The R$^0$ form, while easy to write and simple to understand is not a good scientific code while the full-fledge R$^{4}$ form is much preferred but requires a fair amount of work that might be too much of a burden in some circumstances. $R^3$ form seems to be an acceptable compromise and should be accepted as the minimum scientific standard. This means this should be actually checked by reviewers and publishers when code is part of a work worth to be published. But it's hardly the case today.\\
 
 The choice of the Python programming language to illustrate our point was not arbitrary. In less than a decade, Python has become one the few programming language of Science (together with R and Matlab). It is now used by a huge and growing number of researchers from different domains, having various experience and background in computer science. The readability and ease of use of Python make it a premium choice for new comers. But this is precisely this apparent simplicity that might hinder correct implementation. Inexperienced people may think any working code is a scientific code, but, as we've explained, this is simply not true.
 
