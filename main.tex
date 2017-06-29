@@ -398,7 +398,9 @@ Furthermore, a source code reflects the results of all the decisions that were m
 
 Re-usability of course directly benefits others researchers, from your team and outside of it. The easier it is to use your code, the lower is the threshold for other to study, modify and extend it. Scientists constantly face the constraint of time: if a model is available, documented, and can be installed, run and understood all in a few hours, it will be preferred over another that would require weeks to reach the same stage.\\
 
-Since scientists have a tendency to base their work on results they can verify, a reproducible and re-usable code offers a platform both verified and easy-to-use, fostering the development of derivative work by other researchers. Those derivative works contribute to the impact of your original contribution, and generate citations. 
+Moreover, scientists prefer to base their work on results they can verify. A reproducible and re-usable code offers a platform both verified and easy-to-use, fostering the development of derivative works by other researchers. Those derivative works contribute to the impact of your original contribution, and generate citations.\\
+
+Having more people examining and using your code also means that potential errors have a higher chance to be caught. If people start using your program, they will most likely report bugs or malfunctions they encountered while using your program. If you're lucky enough, they might even propose you either bugfixes or improvements, hence improving the overall quality of your software. This process contributes to the long-term reproducibility to the extent people continue to use and maintain the program.
 
 
 % * <fabien.benureau+overleaf@gmail.com> 2017-06-16T09:22:07.537Z:
@@ -410,17 +412,7 @@ Since scientists have a tendency to base their work on results they can verify, 
 % 
 % ^.
 
-
-Making your program re-usable means it can be used by people outside your lab,
-using possibly different environment, different parameters or different data.
-If people start using your program, they will most likely report bugs or malfunctions they encountered while using your program.
-If you're lucky enough, they will even propose you bugfixes, hence improving the overall quality and correctness of your software.
-In other words, if your program is re-usable and is re-used, it is alive.
-As such, and as for any other living being, it will evolve and mutate to adapt to its environment.
-This process will ensure long-term reproducibility to the extent people continue using and maintaining the program.\\
-
 However, making your program to be re-usable by others requires a little work. If it is natural, when one writes a program for oneself, to make implicit choices that suit one needs, such implicit choices won't resist the will of a user community. For example, having magic numbers or ill-defined constants in your program might be cumbersome for others. Similarly, it might be acceptable to not have a proper documentation when you're the only user (actually it might not be acceptable because the you now and the you in six months are two different persons), but other users want to know precisely how to use this or that function and what it does exactly.\\
-
 
 If we look back at our random walker, we can list all the implicit choices that have been made:
 \begin{itemize}
