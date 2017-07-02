@@ -131,7 +131,7 @@
 % -------------------------
 \section*{Introduction (R$^{\mathbf 0}$)}
 
-Replicability is a cornerstone of science. 
+Replicability is a cornerstone of science.
 If an experimental result cannot be re-obtained by an independent party,
 % it might be because of a fluke, a bias, a bug, a false positive or even a hack.
 %it becomes, at best, nothing more than food for thought for future research. 
@@ -311,7 +311,8 @@ this is usually done by repeating the simulations multiple times with different 
 
 % Reproducible definition + R^2 not reproducible
 The R$^2$ code seems fine enough, but it hides several problems that come to light when trying to {\em reproduce} results.
-A result is said to be \emph{reproducible} if another researcher can take the original code and input data, execute it, and re-obtain the result (\cite{Peng:2006}). 
+A result is said to be \emph{reproducible} if another researcher can take the original code and input data, execute it, and re-obtain the result \parencite{Peng:2006}. As explained by \citeauthor{Donoho:2009} \parencite{Donoho:2009}, scientific practice must expect that {\em errors are ubiquitous}, and therefore be robust to them. Ensuring reproducibility is an important step toward this: it allows other to verify that your code does indeed produce the published results, and scrutinize the way that it does.\\
+
 As explained by \citeauthor{Mesnard:2016} \citep{Mesnard:2016}, reproducibility is hard. 
 For instance, the R$^2$ program will not produce the same results all the time. It will, because it is repeatable, produce the same results over repeated executions.
 But it will not do so over different execution environments. The cause is found in a change that occurred in the pseudo-random number generator between Python 3.2 and Python 3.3. 
@@ -337,7 +338,7 @@ Graphs in articles are powerful way to communicate complex information. They are
 Another good practice is to make the code self-verifiable. In R$^3$, a short unit test is provided, that allows the code to verify its own reproducibility. Should this test fail, then there is little hope of reproducing the results. Of course, passing the test is no definitive proof.\\
 
 % Reproducibility implies availability 
-It should be obvious by now but \emph{reproducibility implies availability} As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and input and result files} should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as Figshare or Zenodo\footnote{Online code repository such as GitHub \emph{are not} scientific repositories, and may disappear, change name, etc. at any moment. Direct links to them are not perpetual and should be avoided.}.\\
+It should be obvious by now but \emph{reproducibility implies availability}. As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and input and result files} should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as Figshare or Zenodo\footnote{Online code repository such as GitHub \emph{are not} scientific repositories, and may disappear, change name, etc. at any moment. Direct links to them are not perpetual and should be avoided.}.\\
 
 %\begin{itemize}
 %\itemsep 0em
@@ -389,16 +390,29 @@ To recap, reproducibility implies re-runnability or repeatability and availabili
 \clearpage
 \section*{Re-usable (R$^{\mathbf 4}$)}
 
-Making your program re-usable means it can be used by people outside your lab,
-using possibly different environment, different parameters or different data.
-If people start using your program, they will most likely report bugs or malfunctions they encountered while using your program.
-If you're lucky enough, they will even propose you bugfixes, hence improving the overall quality and correctness of your software.
-In other words, if your program is re-usable and is re-used, it is alive.
-As such, and as for any other living being, it will evolve and mutate to adapt to its environment.
-This process will ensure long-term reproducibility to the extent people continue using and maintaining the program.\\
+Making your program re-usable means it can be easily used, and modified, by you and other people, inside and outside your lab. Ensuring your program is re-usable is advantageous for a number of reasons.\\
+
+For you, first. Because the you now and the you in two years are two different persons. Details on how to use the code, its limitations, its quirks, may be present to your mind now, but will probably escape you in six months \parencite{Donoho:2009}. Here, comments and documentation can make a significant difference.\\
+
+Furthermore, a source code reflects the results of all the decisions that were made to create it, but not the reasons behind them. In science, where the method and its justification matters as much as the results, those reasons are precious knowledge. For instance, it is not sufficient to observe that a piece of code is doing correct predictions on a learning task, one is interested by the exact algorithm that is employed, and why. In that context, a comment on how a given parameter was chosen (optimization, experimental data, educated guess, …) is a valuable information.\\
+
+Re-usability of course directly benefits others researchers, from your team and outside of it. The easier it is to use your code, the lower is the threshold for other to study, modify and extend it. Scientists constantly face the constraint of time: if a model is available, documented, and can be installed, run and understood all in a few hours, it will be preferred over another that would require weeks to reach the same stage.\\
+
+Moreover, scientists prefer to base their work on results they can verify. A reproducible and re-usable code offers a platform both verified and easy-to-use, fostering the development of derivative works by other researchers. Those derivative works contribute to the impact of your original contribution, and generate citations.\\
+
+Having more people examining and using your code also means that potential errors have a higher chance to be caught. If people start using your program, they will most likely report bugs or malfunctions they encountered while using your program. If you're lucky enough, they might even propose you either bugfixes or improvements, hence improving the overall quality of your software. This process contributes to the long-term reproducibility to the extent people continue to use and maintain the program.
+
+
+% * <fabien.benureau+overleaf@gmail.com> 2017-06-16T09:22:07.537Z:
+% 
+% I'd like to refactor this section into:
+% 1. Why re-usability is important for you (you will be stranger to yourself in six month)
+% 2. Why it is important for others (1. they will be more likely to cite your work, 2. long-term reproducibility)
+% 3. Tips and general guidelines on how to do it.
+% 
+% ^.
 
 However, making your program to be re-usable by others requires a little work. If it is natural, when one writes a program for oneself, to make implicit choices that suit one needs, such implicit choices won't resist the will of a user community. For example, having magic numbers or ill-defined constants in your program might be cumbersome for others. Similarly, it might be acceptable to not have a proper documentation when you're the only user (actually it might not be acceptable because the you now and the you in six months are two different persons), but other users want to know precisely how to use this or that function and what it does exactly.\\
-
 
 If we look back at our random walker, we can list all the implicit choices that have been made:
 \begin{itemize}
