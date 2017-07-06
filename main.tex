@@ -534,34 +534,25 @@ if __name__ == '__main__':
 % \clearpage
 \section*{Replicable (R$^{\mathbf 5}$)}
 
-Having made a software re-usable by others should offer a decent protection
-against bugs.  Unfortunately, this is not always the case and some recent cases
-have demonstrated the tremendous impact a bug can have in Science
-\citep{Eklund:2016} or in our every-day life \citep{Durumeric:2014}.  This is
-why, as explained by Peng et al. \cite{Peng:2006}, {\em the replication of
-  important findings by multiple independent investigators is fundamental to
-  the accumulation of scientific evidence}.\\
-% Replicability is the assumption that any article that does not provide the code source makes: that the description it provides of the algorithms is sufficiently precise and complete to re-obtain the results it presents.
+Having made a software re-usable by others should offer a decent protection against bugs.
+Unfortunately, this is not always the case and some recent cases have demonstrated the tremendous impact a bug can have in Science \citep{Eklund:2016} or in our every-day life \citep{Durumeric:2014}.
+This is why, as explained by Peng et al. \cite{Peng:2006}, {\em the replication of important findings by multiple independent investigators is fundamental to the accumulation of scientific evidence}.\\
 
-In our case, the replication of the random walk brings some unexpected
-discrepancies between the original Python version and the replicated Numpy
-version.  The reason is to be found in a differences in the respective
-implementations of the RNG between Python and Numpy.  As explained in the
-\href{https://docs.python.org/3.6/library/random.html}{Python documentation},
-     {\em Python uses the Mersenne Twister as the core generator. It produces
-      53-bit precision floats and has a period of 2**19937-1.  The underlying
-       implementation in C is both fast and threadsafe.}  Numpy RNG is also
-     based on the Mersenne Twister generator but there are differences in the
-     way seed is interpreted when initializing the generator.  Fortunately,
-     Both Numpy and Python offer access to the internal state and we can {\em
-       fix} it to make the behavior of one RNG to match the other RNG.  Here,
-     we want to make the Numpy RNG to match the Python RNG behavior.
-%
-Without such explicit replication effort, it would be very hard to discover
-this faulty behavior and this why the ReScience journal has been created.  This
-journal targets computational research and encourages the explicit replication
-of already published research, promoting new and open-source implementations in
-order to ensure that the original research is reproducible.
+Replicability is the assumption that any article that does not provide the code source makes: that the description it provides of the algorithms is sufficiently precise and complete to re-obtain the results it presents. While every published article should strive for replicability, even the best efforts may fall short because an oversight, a typo or a difference between what is evident between the writer and the reader. In that case, a reproducible code is a crucial backup. Hence, replicability does not negate the necessity of reproducibility. 
+
+In our case, the replication of the random walk brings some unexpected discrepancies between the original Python version and the replicated Numpy version.
+The reason is to be found in a differences in the respective implementations of the RNG between Python and Numpy.
+As explained in the \href{https://docs.python.org/3.6/library/random.html}{Python documentation}, {\em Python uses the Mersenne Twister as the core generator. It produces 53-bit precision floats
+and has a period of 2**19937-1.
+The underlying implementation in C is both fast and threadsafe.}
+Numpy RNG is also based on the Mersenne Twister generator but there are differences in the way seed is interpreted when initializing the generator.
+Fortunately, Both Numpy and Python offer access to the internal state and we can {\em fix} it to make the behavior of one RNG to match the other RNG.
+Here, we want to make the Numpy RNG to match the Python RNG behavior.
+
+In our case, a perfect quantitative match may seem unnecessary. But in many replication projects, quantitative comparisons are an objective tests that the behavior is reproduced. Statistical tests demand more work, and may fall short of detecting small differences in the algorithms, that may results in huge difference of behavior in different conditions. In all cases, eyeballing difference is graphs is always difficult. Therefore, one should always provide the data behind the graphs to allow such comparisons.
+
+Without such explicit replication effort, it would be hard to discover this faulty behavior and this why the ReScience journal has been created.
+This journal targets computational research and encourages the explicit replication of already published research, promoting new and open-source implementations in order to ensure that the original research is reproducible.
 
 \begin{code}{\textbf{\textsc{Listing 6:}} Random walk (R$^5$)}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
