@@ -195,9 +195,10 @@ Well...
 \clearpage
 \section*{Re-runnable (R$^{\mathbf 1}$)}
 
-Have you ever try to re-run a program you wrote some years ago? Frustratingly, it can often be surprisingly hard. Part of the problem is that technology is evolving at a fast pace and you cannot  know in advance how the system, the software and the libraries your program depends on will evolve. Since you wrote the code, you may have reinstalled or upgraded  your operating system. The compiler, interpreter or set of libraries installed may have been replaced with newer versions. You may find yourself battling with arcane issues of library compatibility---thoroughly orthogonal to your immediate research  goals---to execute again a code \emph{that worked perfectly before}. To be clear, it is impossible to write future-proof code, and the best efforts can be stymied by the smallest change in one of the dependencies. At the same time, modernizing an unmaintained ten-year-old code can reveal itself to be an arduous and expensive undertaking, with each change risking to affect the semantics of the program. Rather trying to predict the future or painstakingly dusting off old code, an often easier and less dangerous solution is to recreate the old execution environment. For this to happen however, the dependencies in terms of systems, software and libraries must be made clear enough.\\
 
-A \emph{re-runnable} code is one that describes an execution environment in which it is executable with enough details to be recreated. As shown by \citep{Collberg:2016}, this is far from being either obvious or easy.\\
+Have you ever try to re-run a program you wrote some years ago? Frustratingly, it can often be surprisingly hard. Part of the problem is that technology is evolving at a fast pace and you cannot  know in advance how the system, the software and the libraries your program depends on will evolve. Since you wrote the code, you may have reinstalled or upgraded  your operating system. The compiler, interpreter or set of libraries installed may have been replaced with newer versions. You may find yourself battling with arcane issues of library compatibility---thoroughly orthogonal to your immediate research  goals---to execute again a code \emph{that worked perfectly before}. To be clear, it is impossible to write future-proof code, and the best efforts can be stymied by the smallest change in one of the dependencies. At the same time, modernizing an unmaintained ten-year-old code can reveal itself to be an arduous and expensive undertaking, with each change risking to affect the semantics of the program. Rather trying to predict the future or painstakingly dusting off old code, an often easier and less dangerous solution is to recreate the old execution environment\footnote{To be clear, and although virtual machines are often a great help, this is not always possible. It is, however, \emph{always} more difficult when the original execution environment is not documented.}. For this to happen however, the dependencies in terms of systems, software and libraries must be made clear enough.\\
+
+A \emph{re-runnable} code is one that can---surprisingly---be run again, i.e. more than the one time that was needed to produce the results. It is important to notice that the re-runnability of a code is not an intrinsic property. Rather, it depends on the context, and as mentionned above, re-runnability is increasingly difficult as the code ages. Therefore, to be re-runnable in other researchers' computers and through time, a re-runnable code should describes an execution environment in which it is executable with enough details to be recreated. As shown by \citep{Collberg:2016}, this is far from being either obvious or easy.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\textbf{\textsc{Listing 2:}} Random walk (R$^1$)}
@@ -206,15 +207,15 @@ import random
 
 walk, total = [], 0
 for i in range(10):
-    step = random.choice([-1,+1])     
+    step = random.choice([-1,+1])
     total += step
     walk.append(total)
-    
+
 print(walk)
 \end{code}
 \end{minipage}\\
 
-In our case, the R$^0$ version of our tiny walker seems to imply that any version of Python would be fine. This not the case because it uses the print {\em instruction} and the {\tt xrange} operator, both specific to Python 2. The print {\em instruction}, available in Python 2 (a version still widely used; support is scheduled to stop in 2020), has been deprecated in Python 3 (first released in 2008, almost a decade ago) in favor or a  print {\em function}. The {\tt xrange} operator has been replaced by the {\tt range} operator in Python 3. In order to try to future-proof the code a bit, we might as well target Python 3, as is done in the R$^1$ version. Incidentally, it remains compatible with Python 2. But whatever version is chosen, the crucial step here is to document it.
+In our case, the R$^0$ version of our tiny walker seems to imply that any version of Python would be fine. This not the case because it uses the print {\em instruction} and the {\tt xrange} operator, both specific to Python 2. The print {\em instruction}, available in Python 2 (a version still widely used; support is scheduled to stop in 2020), has been deprecated in Python 3 (first released in 2008, almost a decade ago) in favor or a  print {\em function}, while the {\tt xrange} operator has been replaced by the {\tt range} operator in Python 3. In order to try to future-proof the code a bit, we might as well target Python 3, as is done in the R$^1$ version. Incidentally, it remains compatible with Python 2. But whichever version is chosen, the crucial step here is to document it.
 
 
 % \clearpage
