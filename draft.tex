@@ -146,11 +146,13 @@
 
 Replicability is a cornerstone of science.  If an experimental result cannot be
 re-obtained by an independent party, it merely becomes, at best, an observation
-that may feed future research (\cite{Mesirov:2010,osc:2015}). Replication
-issues have received increased attention in recent years, in the domain of
-medicine and psychology in particular (\cite{Iqbal:2016}). One could think that
-computer science would mostly be shielded from such issues. But precisely
-because it is easy to believe that if a program runs once and gives expected
+that may inspire future research (\cite{Mesirov:2010,osc:2015}). Replication
+issues have received increased attention in recent years, with a particular focus on medicine and psychology (\cite{Iqbal:2016}).
+One could think that
+computer science would mostly be shielded from such issues, since a computer program
+intrinsically describes precisely what it does and is easy to disseminate to other researchers.
+
+But precisely because it is easy to believe that if a program runs once and gives the expected
 results it will do so forever, crucial steps to transform working code into
 meaningful scientific contributions are rarely undertaken
 \citep{Sandve:2013,Schwab:2000}. Computer science is plagued by replication
@@ -161,7 +163,7 @@ different reasons. Borrowing the terms coined by \citeauthor{Goble:2016}
 sure it is re-runnable (R$^1$), repeatable (R$^2$), reproducible (R$^3$),
 re-usable (R$^4$) and replicable (R$^5$).\\
 
-Let us illustrate this with a very simple example, a random walk written in Python:\\
+Let us illustrate this with a small example, a random walk written in Python:\\
 
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\textbf{\textsc{Listing 1:}} Random walk (R$^0$)}
@@ -176,10 +178,10 @@ for i in xrange(10):
 \end{minipage}
 
 % That would be too easy if the program was commented...
-% # randomly choose ten instances of either 1 or -1. 
+% # randomly choose ten instances of either 1 or -1.
 % # compute the cumulative sum (the sum of all preceeding elements)
 
-Executed, this program would display 
+Executed, this program would display
 \begin{code}{Output}
 -1  0 -1 -2 -1 -2 -3 -2 -1 -2 # with the steps being -1, +1, -1, -1, +1, -1, -1, +1, +1, -1
 \end{code}
@@ -188,7 +190,6 @@ What could go wrong with such a simple program?\\
 \vfill
 Well...
 \vfill
-
 
 % -------------------------
 \clearpage
