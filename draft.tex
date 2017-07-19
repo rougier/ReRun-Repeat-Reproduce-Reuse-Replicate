@@ -226,7 +226,7 @@ The code is running and producing the expected results. The next step is to make
 For our program, that means setting the seed of the {\tt random} module. We may also want to save the output of the program to a file, so that we can easily verify that consecutive runs do produce the same output: eyeballing differences is unreliable and  time-consuming---and therefore won't be done systematically.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\textbf{\textsc{Listing 3:}} Random walk (R$^2$)}
+\begin{code}{\textbf{\textsc{Listing 3:}} Re-runnable, repeatable random walk (R$^2$)}
 # Tested with Python 3
 import random
 
@@ -234,29 +234,26 @@ random.seed(0) # RNG initialization
 
 walk, total = [], 0
 for i in range(10):
-    step = random.choice([-1,+1])     
+    step = random.choice([-1,+1])
     total += step
     walk.append(total)
-    
+
 print(walk)
 with open("results.txt", "w") as file: # Saving output to disk
     file.write(str(walk))
 \end{code}
 \end{minipage}\\
 
-Setting seeds is not without danger. Using 439 as a seed in the previous program would result in ten consecutive +1 steps, which---although a perfectly valid random walk---lend itself to a gross misinterpretation of the overall dynamic of the algorithm. Verifying that the qualitative aspects of the results and the conclusion we make are not tied to a specific initialization of the pseudo-random generator is an integral part of any scientific undertaking in computational science; 
-this is usually done by repeating the simulations multiple times with different seeds.  
+Setting seeds is not without danger. Using 439 as a seed in the previous program would result in ten consecutive +1 steps, which---although a perfectly valid random walk---lend itself to a gross misinterpretation of the overall dynamic of the algorithm. Verifying that the qualitative aspects of the results and the conclusion we make are not tied to a specific initialization of the pseudo-random generator is an integral part of any scientific undertaking in computational science;
+this is usually done by repeating the simulations multiple times with different seeds.
 
-%Determinism is a tool that allow to study bugs and spurious or unexpected behavior. 
-%Determinism is also critical for other to reproduce and study your results. 
-% talk about controversy about setting seeds
 
 % For example, you can play with some parameters and
 % find a specific set that produce interesting results that you save to a file.
 % In the meantime, you continue playing with parameters in order get new results.
 % But what if you want to come back to this one specific result you just saved?
-% Did you save as well the set of parameters tied to this specific results? 
-% This kind of situation happens quite regularly in the scientific literature \cite{Claerbout:2000} 
+% Did you save as well the set of parameters tied to this specific results?
+% This kind of situation happens quite regularly in the scientific literature \cite{Claerbout:2000}
 % such that in some case, it is virtually impossible
 % to find the set of parameters that has been used to produce this or that figure.
 % If you're note careful enough, this will happen to you as well.\\
