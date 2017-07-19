@@ -263,59 +263,73 @@ this is usually done by repeating the simulations multiple times with different 
 \section*{Reproducible (R$^{\mathbf 3}$)}
 
 % Reproducible definition + R^2 not reproducible
-The R$^2$ code seems fine enough, but it hides several problems that come to light when trying to {\em reproduce} results. A result is said to be \emph{reproducible} if another researcher can take the original code and input data, execute it, and re-obtain the result \parencite{Peng:2006}. As explained by \citeauthor{Donoho:2009} \parencite{Donoho:2009}, scientific practice must expect that {\em errors are ubiquitous}, and therefore be robust to them. Ensuring reproducibility is an important step toward this: it allows other to verify that your code does indeed produce the published results, and scrutinize the way that it does. As explained by \citeauthor{Mesnard:2016} \citep{Mesnard:2016}, reproducibility is hard.  For instance, the R$^2$ program will not produce the same results all the time. It will, because it is repeatable, produce the same results over repeated executions. But it will not do so over different execution environments. The cause is to be found in a change that occurred in the pseudo-random number generator between Python 3.2 and Python 3.3. Executed with Python 2.7 to 3.2, the code will produce the sequence 1, 2, 1, 2, 3, 4, 5, 6, 7, 6. But with Python 3.3 to 3.6, it will produce 1, 2, 1, 0, 1, 0, 1, 0, -1, 0.\\
+The R$^2$ code seems fine enough, but it hides several problems that come to light when trying to {\em reproduce} results. A result is said to be \emph{reproducible} if another researcher can take the original code and input data, execute it, and re-obtain the same result \parencite{Peng:2006}. As explained by \citeauthor{Donoho:2009} \parencite{Donoho:2009}, scientific practice must expect that {\em errors are ubiquitous}, and therefore be robust to them. Ensuring reproducibility is an important step toward this: it allows other to verify that your code does indeed produce the published results, and to scrutinize the procedure it uses to do it. As demonstrated by \citeauthor{Mesnard:2016} \citep{Mesnard:2016}, reproducibility is hard.\\
 
-Because any dependency of your program---to the most basic one, the language itself---can change its behavior from one version to another, executability (R$^1$) and determinism (R$^2$) are necessary but not sufficient for reproducibility. The exact execution environment used to produce the results must also be specified---rather than the broadest set of environments where the code can be executed. In other words, assertions such as "the results were obtained with Python 3.6.1" are more valuable, in a scientific context, than "the program should work with Python 3.3.x and above".\\
+For instance, the R$^2$ program will not produce the same results all the time. It will, because it is repeatable, produce the same results over repeated executions. But it will not necessarily do so over different execution environments. The cause is to be found in a change that occurred in the pseudo-random number generator between Python 3.2 and Python 3.3. Executed with Python 2.7 to 3.2, the code will produce the sequence 1, 2, 1, 2, 3, 4, 5, 6, 7, 6. But with Python 3.3 to 3.6, it will produce 1, 2, 1, 0, 1, 0, 1, 0, -1, 0.\\
 
-Furthermore, with the increasing complexity of our computational stacks, retrieving and deciding what is pertinent (CPU architecture? Operating system version? Endianness?) might be difficult.
-Having precisely described the execution environment, reproducibility is technically obtained.\\ 
+Because any dependency of your program---to the most basic one, the language itself---can change its behavior from one version to another, executability (R$^1$) and determinism (R$^2$) are necessary but not sufficient for reproducibility. The exact execution environment used to produce the results must also be specified---rather than the broadest set of environments where the code can be effectively run. In other words, assertions such as "the results were obtained with Python 3.6.1" are more valuable, in a scientific context, than "the program should work with Python 3.x and above".\\
 
-However, \emph{reproducibility in practice} requires more than that.
-%
-The R$^2$ program uses a random seed but does not keep a trace of it except in the code. Therefore, should the code change after the production of the results, someone provided with the result file will not be able to know which seed was used, and would need to iterate through all possible random seeds, which is not possible in practice. R$^3$ saves the seed in the name of the result file. More generally, results should always come alongside their context, i.e. an exhaustive list of the parameters used and a description of the execution environment.
-%
+With the increasing complexity of our computational stacks, retrieving and deciding what is pertinent (CPU architecture? Operating system version? Endianness?) can be difficult, however. A best effort must be made.\\
+
+Having precisely described the execution environment, reproducibility is \emph{technically} obtained. However, \emph{reproducibility in practice} requires more than that.\\
+
+The R$^2$ program uses a random seed but does not keep a trace of it except in the code. Therefore, should the code change after the production of the results, someone provided with the result file will not be able to know which seed was used, and would need to iterate through all possible random seeds, an impossible task in practice. More generally, results files should always come alongside their context, i.e. an exhaustive list of the parameters used and a description of the execution environment, as the R$^3$ code does.\\
+
+%FIXME: add complete scripts to graphs.
+
 % Data behind graphs
-Graphs in articles are powerful way to communicate complex information. They are imprecise and cumbersome, and sometimes plain unusable, however when it comes to checking that the reproduced data match the one published in the article. A good figure should always be accompanied by its underlying data to allow straightforward comparisons.
+Graphs in articles are powerful way to communicate complex information. However, they are imprecise and cumbersome, and sometimes plain unusable, when it comes to checking that the reproduced data match the one published in the article. A good figure should always be accompanied by its underlying data to allow straightforward numeric comparisons.
 %
 % Unit test for R^3
 Another good practice is to make the code self-verifiable. In R$^3$, a short unit test is provided, that allows the code to verify its own reproducibility. Should this test fail, then there is little hope of reproducing the results. Of course, passing the test is no definitive proof.\\
 
-% Reproducibility implies availability 
-It should be obvious by now that \emph{reproducibility implies availability}. As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and input and result files} should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as Figshare or Zenodo\footnote{Online code repository such as GitHub \emph{are not} scientific repositories, and may disappear, change name, etc. at any moment. Direct links to them are not perpetual and should be avoided.}.\\
+% Reproducibility implies availability
+It should be obvious by now that \emph{reproducibility implies availability}. As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and input and result files} should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as Figshare or Zenodo\footnote{Online code repository such as GitHub \emph{are not} scientific repositories, and may disappear, change name, etc. at any moment. Direct links to them are not perpetual, and, when used, should always be completed by a link to a scientific archive.}.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\textbf{\textsc{Listing 4:}} Random walk (R$^3$)}
+\begin{code}{\textbf{\textsc{Listing 4:}} Re-runnable, repeatable, reproducible random walk (R$^3$)}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
 # Release under the BSD 2-clause license
-# Tested with CPython 3.6 / macOS 10.12.4 / 64 bits architecture
+# Tested with CPython 3.6.1 / macOS 10.12.4 / 64 bits architecture
+import platform, datetime
 import random
-from itertools import accumulate
 
-def walk(n):
-    """ Random walk for n steps """
-  
-    steps = [-1 if random.uniform(-1,+1) < 0 else +1 for i in range(n)]
-    return list(accumulate(steps))
+def provenance(): # Get info about the execution environment
+    return {'python'   : {'implementation': platform.python_implementation(),
+                          'version'       : platform.python_version_tuple(),
+                          'compiler'      : platform.python_compiler(),
+                          'branch'        : platform.python_branch(),
+                          'revision'      : platform.python_revision()},
+            'platform' : platform.platform(),
+            'timestamp': datetime.datetime.utcnow().isoformat()+'Z'}  # Z stands for UTC
 
-if __name__ == '__main__':
-    # Unit test
-    random.seed(1)
-    assert walk(10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+def walk():
+    promenade, total = [], 0
+    for i in range(10):
+        step = +1 if random.uniform(-1,+1) > 0 else -1
+        total += step
+        promenade.append(total)
+    return promenade
 
-    # Random walk for 10 steps
-    seed = 1
-    random.seed(seed)
-    x = walk(10)
-    
-    # Display & save results
-    print(x)
-    with open("results-R3-%d.txt" % seed, "w") as file:
-        file.write(str(x))
+# Unit test
+random.seed(1)
+assert walk() == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+
+# Random walk for 10 steps
+seed = 1
+random.seed(seed)
+w = walk()
+
+# Display & save results
+print(w)
+results = {'data': w, 'seed': seed, 'provenance': provenance()}
+with open("results-R3.txt", "w") as fd:
+    fd.write(str(results))
 \end{code}
 \end{minipage}\\
 
 % Summary
-To recap, reproducibility implies re-runnability or repeatability and availability, yet  imposes additional conditions. Dependencies and platforms must be described as precisely and a specifically as possible. Parameters values and inputs should be an integral part of the result files. The data behind graphs must be published. Unit tests are a good way to embed self-diagnostics of reproducibility in the code. Reproducibility is hard, yet tremendously necessary.
+To recap, reproducibility implies re-runnability and repeatability and availability, yet imposes additional conditions. Dependencies and platforms must be described as precisely and a specifically as possible. Parameters values and inputs should be an integral part of the result files. The data behind the graphs must be published. Unit tests are a good way to embed self-diagnostics of reproducibility in the code. Reproducibility is hard, yet tremendously necessary.
 
 
 %\clearpage
