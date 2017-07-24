@@ -147,23 +147,23 @@
 Replicability is a cornerstone of science.  If an experimental result cannot be
 re-obtained by an independent party, it merely becomes, at best, an observation
 that may inspire future research (\cite{Mesirov:2010,osc:2015}). Replication
-issues have received increased attention in recent years, with a particular mediatic focus on medicine and psychology (\cite{Iqbal:2016}).
-One could think that
-computer science would mostly be shielded from such issues, since a computer program
-intrinsically describes precisely what it does and is easy to transmit perfectly to other researchers.
+issues have received increased attention in recent years, with a particular
+mediatic focus on medicine and psychology (\cite{Iqbal:2016}).  One could think
+that computer science would mostly be shielded from such issues, since a
+computer program intrinsically describes precisely what it does and is easy to
+transmit perfectly to other researchers.
 
-But precisely because it is easy to believe that if a program runs once and gives the expected
-results it will do so forever, crucial steps to transform working code into
-meaningful scientific contributions are rarely undertaken
+But precisely because it is easy to believe that if a program runs once and
+gives the expected results it will do so forever, crucial steps to transform
+working code into meaningful scientific contributions are rarely undertaken
 \citep{Sandve:2013,Schwab:2000}. Computer science is plagued by replication
-problems, in part, precisely because it seems impervious to them. A
-program can fail as a scientific contribution in many different ways for many
-different reasons. Borrowing the terms coined by \citeauthor{Goble:2016}
+problems, in part, precisely because it seems impervious to them. A program can
+fail as a scientific contribution in many different ways for many different
+reasons. Borrowing the terms coined by \citeauthor{Goble:2016}
 \citep{Goble:2016}, for your program to contribute to science, you have to make
 sure it is re-runnable (R$^1$), repeatable (R$^2$), reproducible (R$^3$),
-reusable (R$^4$) and replicable (R$^5$).\\
-
-Let us illustrate this with a small example, a random walk written in Python:\\
+reusable (R$^4$) and replicable (R$^5$). Let us illustrate this with a small
+example, a random walk written in Python:\\
 
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\textbf{\textsc{Listing 1:}} Random walk (R$^0$)}
@@ -306,7 +306,7 @@ def provenance(): # Get info about the execution environment
             'timestamp': datetime.datetime.utcnow().isoformat()+'Z'}  # Z stands for UTC
 
 def walk():
-    promenade, total = [], 0
+ea    promenade, total = [], 0
     for i in range(10):
         step = +1 if random.uniform(-1,+1) > 0 else -1
         total += step
@@ -525,7 +525,20 @@ if __name__ == '__main__':
 \section*{Conclusion}
 
 %FIXME: can still be improved
-Through a small random walk example using Python, we've seen a variety of pitfalls that are easy to remain unaware of while writing scientific code. The R$^0$ form, while easy to write and simple to understand is not a good scientific code while the full-fledge R$^4$ form is much preferred but requires a fair amount of work that might be too much of a burden. R$^3$ form seems to be an acceptable compromise and should be accepted as the minimum scientific standard \citep{Wilson:2017}. This means this should be actually checked by reviewers and publishers when code is part of a work worth to be published. But it's hardly the case today.\\
+Through a small random walk example using Python, we've seen a variety of
+pitfalls that are easy to remain unaware of while writing scientific code. The
+R$^0$ form, while easy to write and simple to understand is not a good
+scientific code. Adding a single comment, we transformed this code into the
+R$^1$ version (rerunnable) that partially solved the very common dependencies
+problem and will allow us to re-run the program two months or two years from
+now. In the meantime, the R$^2$ version (repeatable) guarantee us (to some
+extent) we can faithfully repeat our experiment from one run to the other.  Of
+course, the full-fledge R$^4$ (reusable) form is much preferred but it requires
+a fair amount of work that might be too much of a burden. R$^3$ (reproducible)
+form seems to be an acceptable compromise and should be accepted as the minimum
+scientific standard \citep{Wilson:2017}. This means this should be actually
+checked by reviewers and publishers when code is part of a work worth to be
+published. But it's hardly the case today.\\
 
 % F: I am not sure that this is really that important a point for the conclusion.
 % The choice of the Python programming language to illustrate our point was not arbitrary. In less than a decade, Python has become one the few programming language of Science (together with R and Matlab). It is now used by a huge and growing number of researchers from different domains, having various experience and background in computer science. The readability and ease of use of Python make it a premium choice for new comers. But this is precisely this apparent simplicity that might hinder correct implementation. Inexperienced people may think any working code is a scientific code, but, as we've explained, this is simply not true.
