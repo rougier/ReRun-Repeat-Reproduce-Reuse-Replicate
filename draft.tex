@@ -150,8 +150,8 @@ that may inspire future research (\cite{Mesirov:2010,osc:2015}). Replication
 issues have received increased attention in recent years, with a particular
 media focus on medicine and psychology (\cite{Iqbal:2016}).  One could think
 that computer science would mostly be shielded from such issues, since a
-computer program intrinsically describes precisely what it does and is easy to
-transmit perfectly to other researchers.
+computer program intrinsically describes precisely what it does and is easily
+transferred to other researchers.
 
 But precisely because it is easy to believe that if a program runs once and
 gives the expected results it will do so forever, crucial steps to transform
@@ -160,8 +160,8 @@ working code into meaningful scientific contributions are rarely undertaken
 problems, in part, precisely because it seems impervious to them. A program can
 fail as a scientific contribution in many different ways for many different
 reasons. Borrowing the terms coined by \citeauthor{Goble:2016}
-\citep{Goble:2016}, for your program to contribute to science, you have to make
-sure it is re-runnable (R$^1$), repeatable (R$^2$), reproducible (R$^3$),
+\citep{Goble:2016}, for a program to contribute to science, it should be
+re-runnable (R$^1$), repeatable (R$^2$), reproducible (R$^3$),
 reusable (R$^4$) and replicable (R$^5$). Let us illustrate this with a small
 example, a random walk written in Python:\\
 
@@ -176,10 +176,6 @@ for i in xrange(10):
     print x,
 \end{code}
 \end{minipage}
-
-% That would be too easy if the program was commented...
-% # randomly choose ten instances of either 1 or -1.
-% # compute the cumulative sum (the sum of all preceeding elements)
 
 Executed, this program would display:
 \begin{code}{Output}
@@ -196,9 +192,9 @@ Well...
 \clearpage
 \section*{Re-runnable (R$^{\mathbf 1}$)}
 
-Have you ever tried to re-run a program you wrote some years ago? Frustratingly, it can often be surprisingly hard. Part of the problem is that technology is evolving at a fast pace and you cannot  know in advance how the system, the software and the libraries your program depends on will evolve. Since you wrote the code, you may have reinstalled or upgraded  your operating system. The compiler, interpreter or set of libraries installed may have been replaced with newer versions. You may find yourself battling with arcane issues of library compatibility---thoroughly orthogonal to your immediate research  goals---to execute again a code \emph{that worked perfectly before}. To be clear, it is impossible to write future-proof code, and the best efforts can be stymied by the smallest change in one of the dependencies. At the same time, modernizing an unmaintained ten-year-old code can reveal itself to be an arduous and expensive undertaking, and dangerous as that, since each change risks to affect the semantics of the program. Rather trying to predict the future or painstakingly dusting off old code, an often more straightforward and less dangerous solution is to recreate the old execution environment\footnote{To be clear, and although virtual machines are often a great help here, this is not always possible. It is, however, \emph{always} more difficult when the original execution environment is not documented.}. For this to happen however, the dependencies in terms of systems, software and libraries must be made clear enough.\\
+Have you ever tried to re-run a program you wrote some years ago? Frustratingly, it can often be surprisingly hard. Part of the problem is that technology is evolving at a fast pace and you cannot know in advance how the system, the software and the libraries your program depends on will evolve. Since you wrote the code, you may have reinstalled or upgraded  your operating system. The compiler, interpreter or set of libraries installed may have been replaced with newer versions. You may find yourself battling with arcane issues of library compatibility---thoroughly orthogonal to your immediate research  goals---to execute again a code \emph{that worked perfectly before}. To be clear, it is impossible to write future-proof code, and the best efforts can be stymied by the smallest change in one of the dependencies. At the same time, modernizing an unmaintained ten-year-old code can reveal itself to be an arduous and expensive undertaking, and precarious as that, since each change risks to affect the semantics of the program. Rather trying to predict the future or painstakingly dusting off old code, an often more straightforward and less risky solution is to recreate the old execution environment\footnote{To be clear, and although virtual machines are often a great help here, this is not always possible. It is, however, \emph{always} more difficult when the original execution environment is not documented.}. For this to happen however, the dependencies in terms of systems, software and libraries must be made clear enough.\\
 
-A \emph{re-runnable} code is one that can be run again when needed, i.e. more than the one time that was needed to produce the results. It is important to notice that the re-runnability of a code is not an intrinsic property. Rather, it depends on the context, and re-runnability becomes increasingly difficult as the code ages. Therefore, to be re-runnable in other researchers' computers and through time, a re-runnable code should describe---with enough details to be recreated---an execution environment in which it is executable. As shown by \citep{Collberg:2016}, this is far from being either obvious or easy.\\
+A \emph{re-runnable} code is one that can be run again when needed, and in particular more than the one time that was needed to produce the results. It is important to notice that the re-runnability of a code is not an intrinsic property. Rather, it depends on the context, and re-runnability becomes increasingly difficult as the code ages. Therefore, to be re-runnable in other researchers' computers and through time, a re-runnable code should describe---with enough details to be recreated---an execution environment in which it is executable. As shown by \citep{Collberg:2016}, this is far from being either obvious or easy.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\textbf{\textsc{Listing 2:}} Re-runnable random walk (R$^1$)}
@@ -263,7 +259,7 @@ this is usually done by repeating the simulations multiple times with different 
 \section*{Reproducible (R$^{\mathbf 3}$)}
 
 % Reproducible definition + R^2 not reproducible
-The R$^2$ code seems fine enough, but it hides several problems that come to light when trying to {\em reproduce} results. A result is said to be \emph{reproducible} if another researcher can take the original code and input data, execute it, and re-obtain the same result \parencite{Peng:2006}. As explained by \citeauthor{Donoho:2009} \parencite{Donoho:2009}, scientific practice must expect that {\em errors are ubiquitous}, and therefore be robust to them. Ensuring reproducibility is an important step toward this: it allows other to verify that your code does indeed produce the published results, and to scrutinize the procedure it uses to produce them. As demonstrated by \citeauthor{Mesnard:2016} \citep{Mesnard:2016}, reproducibility is hard.\\
+The R$^2$ code seems fine enough, but it hides several problems that come to light when trying to {\em reproduce} results. A result is said to be \emph{reproducible} if another researcher can take the original code and input data, execute it, and re-obtain the same result \parencite{Peng:2006}. As explained by \citeauthor{Donoho:2009} \parencite{Donoho:2009}, scientific practice must expect that {\em errors are ubiquitous}, and therefore be robust to them. Ensuring reproducibility is an fundamental step toward this: it provides other researchers the means to verify that your code does indeed produce the published results, and to scrutinize the procedures it uses to produce them. As demonstrated by \citeauthor{Mesnard:2016} \citep{Mesnard:2016}, reproducibility is hard.\\
 
 For instance, the R$^2$ program will not produce the same results all the time. It will, because it is repeatable, produce the same results over repeated executions. But it will not necessarily do so over different execution environments. The cause is to be found in a change that occurred in the pseudo-random number generator between Python 3.2 and Python 3.3. Executed with Python 2.7 to 3.2, the code will produce the sequence 1, 2, 1, 2, 3, 4, 5, 6, 7, 6. But with Python 3.3 to 3.6, it will produce 1, 2, 1, 0, 1, 0, 1, 0, -1, 0.\\
 

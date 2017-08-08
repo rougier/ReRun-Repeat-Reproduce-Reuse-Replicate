@@ -1,4 +1,3 @@
-Random walk (R$^0$)}
 import random
 
 x = 0
