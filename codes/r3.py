@@ -3,6 +3,12 @@
 # Tested with CPython 3.6.1 / macOS 10.12.4 / 64 bits architecture
 import platform, datetime
 import random
+import git
+
+def git_info(): # Retrieve the code version
+    repo = git.Repo(os.path.dirname(__file__), search_parent_directories=True)
+    return {'hash': repo.head.object.hexsha,
+            'dirty': repo.is_dirty()}
 
 def provenance(): # Get info about the execution environment
     return {'python'   : {'implementation': platform.python_implementation(),
@@ -11,6 +17,7 @@ def provenance(): # Get info about the execution environment
                           'branch'        : platform.python_branch(),
                           'revision'      : platform.python_revision()},
             'platform' : platform.platform(),
+            'git_info' : git_info(),
             'timestamp': datetime.datetime.utcnow().isoformat()+'Z'}  # Z stands for UTC
 
 def walk():

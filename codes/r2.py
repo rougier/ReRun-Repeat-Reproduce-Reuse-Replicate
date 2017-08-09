@@ -1,11 +1,12 @@
 # Tested with Python 3
 import random
 
-random.seed(0) # RNG initialization
+random.seed(1123581321) # RNG initialization
 
 walk, total = [], 0
 for i in range(10):
     step = random.choice([-1,+1])
+    print(step)
     total += step
     walk.append(total)
 
