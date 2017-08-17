@@ -3,13 +3,14 @@
 # Tested with CPython 3.6.1 / macOS 10.12.4 / 64 bits architecture
 import platform, datetime, json
 import random
+import pip
 import git
 
 def git_info():
     """Retrieve the current git hash, and if the repository has uncommited changes."""
     repo = git.Repo(os.path.dirname(__file__), search_parent_directories=True)
-    return {'hash': repo.head.object.hexsha,
-            'dirty': repo.is_dirty()}
+    return {'hash': repo.head.object.hexsha, 'dirty': repo.is_dirty(),
+            'git_version': str(pip.git.Git().get_git_version())}
 
 def provenance():
     """Get info about the execution environment and the code."""
@@ -19,6 +20,7 @@ def provenance():
                           'branch'        : platform.python_branch(),
                           'revision'      : platform.python_revision()},
             'platform' : platform.platform(),
+            'packages'  : list(pip.commands.freeze.freeze()), # list of installed packages
             'git_info' : git_info(),
             'timestamp': datetime.datetime.utcnow().isoformat()+'Z'}  # Z stands for UTC
 
