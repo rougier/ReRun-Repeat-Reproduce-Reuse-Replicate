@@ -227,15 +227,18 @@ import random
 
 random.seed(0) # RNG initialization
 
-walk, total = [], 0
+x =  0
+path = []
 for i in range(10):
     step = random.choice([-1,+1])
-    total += step
-    walk.append(total)
+    x += step
+    path.append(x)
 
-print(walk)
-with open("results-R2.txt", "w") as file: # Saving output to disk
-    file.write(str(walk))
+print(path)
+# Saving output to disk
+with open("results-R2.txt", "w") as fd:
+    fd.write(str(path))
+
 \end{code}
 \end{minipage}\\
 
@@ -285,34 +288,26 @@ It should be obvious by now that \emph{reproducibility implies availability}. As
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with CPython 3.6.1 / macOS 10.12.4 / 64 bits architecture
-import platform, datetime
-import random
-import pip
-import git
-
-def git_info(): # Retrieve the code version
-    repo = git.Repo(os.path.dirname(__file__), search_parent_directories=True)
-    return {'hash': repo.head.object.hexsha, 'dirty': repo.is_dirty(),
-            'git_version': str(pip.git.Git().get_git_version())}
-
-def provenance(): # Get info about the execution environment
-    return {'python'   : {'implementation': platform.python_implementation(),
-                          'version'       : platform.python_version_tuple(),
-                          'compiler'      : platform.python_compiler(),
-                          'branch'        : platform.python_branch(),
-                          'revision'      : platform.python_revision()},
-            'platform' : platform.platform(),
-            'packages'  : list(pip.commands.freeze.freeze()), # list of installed packages
-            'git_info' : git_info(),
-            'timestamp': datetime.datetime.utcnow().isoformat()+'Z'}  # Z stands for UTC
+import sys, subprocess, datetime, random
 
 def walk():
-    promenade, total = [], 0
+    path = []
+    x = 0
     for i in range(10):
-        step = +1 if random.uniform(-1,+1) > 0 else -1
-        total += step
-        promenade.append(total)
-    return promenade
+        if random.uniform(-1,+1) > 0:
+            x = x + 1
+        else:
+            x = x - 1
+        path.append(x)
+    return path
+
+# If repository is dirty, don't run anything
+if subprocess.call(("git", "diff-index", "--quiet", "HEAD")):
+    print("Repository is dirty, please commit first")
+    sys.exit(1)
+
+# Get git hash if any
+revision = subprocess.check_output(("git", "rev-parse", "HEAD"))
 
 # Unit test
 random.seed(1)
@@ -321,11 +316,15 @@ assert walk() == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
 # Random walk for 10 steps
 seed = 1
 random.seed(seed)
-w = walk()
+path = walk()
 
 # Display & save results
-print(w)
-results = {'data': w, 'seed': seed, 'provenance': provenance()}
+print(path)
+results = { 'data':      path,
+            'seed':      seed,
+            'timestamp': str(datetime.datetime.utcnow()),
+            'revision':  revision,
+            'system' :   sys.version }
 with open("results-R3.txt", "w") as fd:
     fd.write(str(results))
 \end{code}
@@ -371,53 +370,55 @@ Avoid hardcoded or magic numbers. Magic numbers are numbers present directly in 
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with CPython 3.6.1 / macOS 10.12.4 / 64 bits architecture
-import platform, datetime, json
-import random
-import pip
-import git
+import sys, subprocess, datetime, random
 
-def git_info():
-    """Retrieve the current git hash, and if the repository has uncommitted changes."""
-    repo = git.Repo(os.path.dirname(__file__), search_parent_directories=True)
-    return {'hash': repo.head.object.hexsha, 'dirty': repo.is_dirty(),
-            'git_version': str(pip.git.Git().get_git_version())}
-
-def provenance():
-    """Get info about the execution environment and the code."""
-    return {'python'   : {'implementation': platform.python_implementation(),
-                          'version'       : platform.python_version_tuple(),
-                          'compiler'      : platform.python_compiler(),
-                          'branch'        : platform.python_branch(),
-                          'revision'      : platform.python_revision()},
-            'platform' : platform.platform(),
-            'packages'  : list(pip.commands.freeze.freeze()), # list of installed packages
-            'git_info' : git_info(),
-            'timestamp': datetime.datetime.utcnow().isoformat()+'Z'}  # Z stands for UTC
-
-def walk(n, seed):
-    """Return a `n` steps random walk.
-    `seed` is used to initialize the Mersene Twister random number generator."""
+def walk(x0=0, step=1, count=10, seed=0):
+    """ Random walk
+        x0   : initial position (default 0)
+        step : step size (default 1)
+        count: number of steps (default 10)
+        seed : seed for the initialization of the random generator (default 0)
+    """
+    path, x = [], x0
     random.seed(seed)
-    rndwalk, total = [], 0
-    for i in range(10):
-        step = +1 if random.uniform(-1,+1) > 0 else -1
-        total += step
-        rndwalk.append(total)
-    return rndwalk
+    for i in range(count):
+        if random.uniform(-1,+1) > 0:
+            x = x + step
+        else:
+            x = x - step
+        path.append(x)
+    return path
 
-def generate_results(n, seed, filename='results-R4'):
-    """Generate results and save them to disk as a JSON file"""
-    w = walk(n, seed)
-    results = {'data': w, 'n': n, 'seed': seed, 'provenance': provenance()}
-    with open(filename + '.json', 'w') as fd:
-        json.dump(results, fd)
-    return results
 
 if __name__ == '__main__':
-    # Unit test checking reproducibility
-    assert walk(10, 1) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+    # If repository is dirty, don't do anything
+    if subprocess.call(("git", "diff-index", "--quiet", "HEAD")):
+        print("Repository is dirty, please commit first")
+        sys.exit(1)
 
-    print(generate_results(10, 1)['data'])
+    # Get git hash if any
+    revision = subprocess.check_output(("git", "rev-parse", "HEAD"))
+
+    # Unit test checking reproducibility
+    assert walk(0, 1, 10, 1) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+
+    # Simulation parameters
+    parameters = { 'x0':    0,
+                   'step':  1,
+                   'count': 10,
+                   'seed' : 1 }
+    path = walk(**parameters)
+    results = {'data':       path,
+               'parameters': parameters,
+               'timestamp':  str(datetime.datetime.utcnow()),
+               'revision':   revision,
+               'system':     sys.version}
+
+    # Save & display results
+    with open("results-R4.txt", "w") as fd:
+        fd.write(str(results))
+
+    print(path)
 \end{code}
 \end{minipage}\\
 
@@ -474,14 +475,10 @@ Here we are able to replicate exactly\footnote{Striving, as we do here, for a pe
 import random
 import numpy as np
 
-def walk(rng, n):
-    """Random walk for n steps."""
-    # Note: We consider 0 to be a positive step
-    steps = 2*(rng.uniform(-1,+1,n) > 0) - 1
-    return steps.cumsum().tolist()
-
-def rng(seed):
-    """Return a random number generator initialized with seed."""
+def _rng(seed):
+    """ Return a numpy random number generator initialized with seed
+        as it would be with python random generator.
+    """
     rng = random.Random()
     rng.seed(seed)
     _, keys, _ = rng.getstate()
@@ -490,18 +487,27 @@ def rng(seed):
     rng.set_state((state[0], keys[:-1], state[2], state[3], state[4]))
     return rng
 
+def walk(n, seed):
+    """ Random walk for n steps """
+
+    rng = _rng(seed)
+    steps = 2*(rng.uniform(-1,+1,n) > 0) - 1
+    return steps.cumsum().tolist()
+
 if __name__ == '__main__':
     # Unit test
-    assert walk(rng(seed=1), 10) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+    assert walk(n=10, seed=1) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
 
-    # Random walk for 10 steps
+    # Random walk for 10 steps, initialization with seed=1
     seed = 1
-    x = walk(rng(seed=seed), 10)
+    path = walk(n=10, seed=seed)
 
-    # Display & save results
-    print(x)
-    with open("results-R5-%d.txt" % seed, "w") as file:
-        file.write(str(x))
+    # Save & display results
+    results = {'data': path, 'seed': seed}
+    with open("results-R5.txt", "w") as fd:
+        fd.write(str(results))
+    print(path)
+  
 \end{code}
 \end{minipage}
 
