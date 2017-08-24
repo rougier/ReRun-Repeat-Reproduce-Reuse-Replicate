@@ -1,14 +1,19 @@
+# Random walk (R2: repeatable)
 # Tested with Python 3
 import random
 
 random.seed(0) # RNG initialization
 
-walk, total = [], 0
+x =  0
+walk = []
 for i in range(10):
-    step = random.choice([-1,+1])
-    total += step
-    walk.append(total)
+    if random.uniform(-1, +1) > 0:
+        x += 1
+    else:
+        x -= 1
+    walk.append(x)
 
 print(walk)
-with open("results-R2.txt", "w") as file: # Saving output to disk
-    file.write(str(walk))
+# Saving output to disk
+with open('results-R2.txt', 'w') as fd:
+    fd.write(str(walk))

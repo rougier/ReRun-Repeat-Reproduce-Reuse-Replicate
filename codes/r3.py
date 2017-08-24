@@ -1,46 +1,43 @@
+# Random walk (R3: reproducible)
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
 # Release under the BSD 2-clause license
-# Tested with CPython 3.6.1 / macOS 10.12.4 / 64 bits architecture
-import platform, datetime
-import random
-import pip
-import git
+# Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
+import sys, subprocess, datetime, random
 
-def git_info(): # Retrieve the code version
-    repo = git.Repo(os.path.dirname(__file__), search_parent_directories=True)
-    return {'hash': repo.head.object.hexsha, 'dirty': repo.is_dirty(),
-            'git_version': str(pip.git.Git().get_git_version())}
-
-def provenance(): # Get info about the execution environment
-    return {'python'   : {'implementation': platform.python_implementation(),
-                          'version'       : platform.python_version_tuple(),
-                          'compiler'      : platform.python_compiler(),
-                          'branch'        : platform.python_branch(),
-                          'revision'      : platform.python_revision()},
-            'platform' : platform.platform(),
-            'packages'  : list(pip.commands.freeze.freeze()), # list of installed packages
-            'git_info' : git_info(),
-            'timestamp': datetime.datetime.utcnow().isoformat()+'Z'}  # Z stands for UTC
-
-def walk():
-    promenade, total = [], 0
+def generate_walk():
+    walk = []
+    x = 0
     for i in range(10):
-        step = +1 if random.uniform(-1,+1) > 0 else -1
-        total += step
-        promenade.append(total)
-    return promenade
+        if random.uniform(-1, +1) > 0:
+            x += 1
+        else:
+            x -= 1
+        walk.append(x)
+    return walk
+
+# If repository is dirty, don't run anything
+if subprocess.call(('git', 'diff-index', '--quiet', 'HEAD')):
+    print('Repository is dirty, please commit first')
+    sys.exit(1)
+
+# Get git hash if any
+revision = subprocess.check_output(('git', 'rev-parse', 'HEAD'))
 
 # Unit test
-random.seed(1)
-assert walk() == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+random.seed(42)
+assert generate_walk() == [1, 0, -1, -2, -1, 0, 1, 0, -1, -2]
 
 # Random walk for 10 steps
 seed = 1
 random.seed(seed)
-w = walk()
+walk = generate_walk()
 
 # Display & save results
-print(w)
-results = {'data': w, 'seed': seed, 'provenance': provenance()}
-with open("results-R3.txt", "w") as fd:
+print(walk)
+results = {'data'     : walk,
+           'seed'     : seed,
+           'timestamp': str(datetime.datetime.utcnow()),
+           'revision' : revision,
+           'system'   : sys.version}
+with open('results-R3.txt', 'w') as fd:
     fd.write(str(results))

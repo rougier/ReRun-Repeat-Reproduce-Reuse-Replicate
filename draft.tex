@@ -170,15 +170,17 @@ import random
 
 x = 0
 for i in xrange(10):
-    step = random.choice([-1,+1])
-    x += step
+    if random.uniform(-1, +1) > 0:
+        x += 1
+    else:
+        x -= 1
     print x,
 \end{code}
 \end{minipage}
 
 Executed, this program would display:
 \begin{code}{Output}
--1 0 -1 -2 -1 -2 -1 -2 -3 -4 # with the steps being -1, +1, -1, -1, +1, -1, +1, -1, -1,  -1
+-1 0 -1 0 -1 0 -1 0 1 2 # with the steps being -1, +1, -1, +1, -1, +1, -1, +1, +1, +1
 \end{code}
 
 What could go wrong with such a simple program?\\
@@ -200,11 +202,14 @@ A \emph{re-runnable} code is one that can be run again when needed, and in parti
 # Tested with Python 3
 import random
 
-walk, total = [], 0
+x =  0
+walk = []
 for i in range(10):
-    step = random.choice([-1,+1])
-    total += step
-    walk.append(total)
+    if random.uniform(-1, +1) > 0:
+        x += 1
+    else:
+        x -= 1
+    walk.append(x)
 
 print(walk)
 \end{code}
@@ -228,17 +233,18 @@ import random
 random.seed(0) # RNG initialization
 
 x =  0
-path = []
+walk = []
 for i in range(10):
-    step = random.choice([-1,+1])
-    x += step
-    path.append(x)
+    if random.uniform(-1, +1) > 0:
+        x += 1
+    else:
+        x -= 1
+    walk.append(x)
 
-print(path)
+print(walk)
 # Saving output to disk
-with open("results-R2.txt", "w") as fd:
-    fd.write(str(path))
-
+with open('results-R2.txt', 'w') as fd:
+    fd.write(str(walk))
 \end{code}
 \end{minipage}\\
 
@@ -287,45 +293,45 @@ It should be obvious by now that \emph{reproducibility implies availability}. As
 \begin{code}{\textbf{\textsc{Listing 4:}} Re-runnable, repeatable, reproducible random walk (R$^3$)}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
 # Release under the BSD 2-clause license
-# Tested with CPython 3.6.1 / macOS 10.12.4 / 64 bits architecture
+# Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
 import sys, subprocess, datetime, random
 
-def walk():
-    path = []
+def generate_walk():
+    walk = []
     x = 0
     for i in range(10):
-        if random.uniform(-1,+1) > 0:
-            x = x + 1
+        if random.uniform(-1, +1) > 0:
+            x += 1
         else:
-            x = x - 1
-        path.append(x)
-    return path
+            x -= 1
+        walk.append(x)
+    return walk
 
 # If repository is dirty, don't run anything
-if subprocess.call(("git", "diff-index", "--quiet", "HEAD")):
-    print("Repository is dirty, please commit first")
+if subprocess.call(('git', 'diff-index', '--quiet', 'HEAD')):
+    print('Repository is dirty, please commit first')
     sys.exit(1)
 
 # Get git hash if any
-revision = subprocess.check_output(("git", "rev-parse", "HEAD"))
+revision = subprocess.check_output(('git', 'rev-parse', 'HEAD'))
 
 # Unit test
-random.seed(1)
-assert walk() == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+random.seed(42)
+assert generate_walk() == [1, 0, -1, -2, -1, 0, 1, 0, -1, -2]
 
 # Random walk for 10 steps
 seed = 1
 random.seed(seed)
-path = walk()
+walk = generate_walk()
 
 # Display & save results
-print(path)
-results = { 'data':      path,
-            'seed':      seed,
-            'timestamp': str(datetime.datetime.utcnow()),
-            'revision':  revision,
-            'system' :   sys.version }
-with open("results-R3.txt", "w") as fd:
+print(walk)
+results = {'data'     : walk,
+           'seed'     : seed,
+           'timestamp': str(datetime.datetime.utcnow()),
+           'revision' : revision,
+           'system'   : sys.version}
+with open('results-R3.txt', 'w') as fd:
     fd.write(str(results))
 \end{code}
 \end{minipage}\\
@@ -367,58 +373,59 @@ Avoid hardcoded or magic numbers. Magic numbers are numbers present directly in 
 
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\textbf{\textsc{Listing 5:}} Re-runnable, repeatable, reproducible, reusable random walk (R$^4$)}
-# Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
+# Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
-# Tested with CPython 3.6.1 / macOS 10.12.4 / 64 bits architecture
+# Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
 import sys, subprocess, datetime, random
 
-def walk(x0=0, step=1, count=10, seed=0):
+def generate_walk(count, x0=0, step=1, seed=0):
     """ Random walk
+        count: number of steps
         x0   : initial position (default 0)
         step : step size (default 1)
-        count: number of steps (default 10)
         seed : seed for the initialization of the random generator (default 0)
     """
-    path, x = [], x0
     random.seed(seed)
+    x = x0
+    walk = []
     for i in range(count):
-        if random.uniform(-1,+1) > 0:
-            x = x + step
+        if random.uniform(-1, +1) > 0:
+            x += 1
         else:
-            x = x - step
-        path.append(x)
-    return path
+            x -= 1
+        walk.append(x)
+    return walk
 
-
-if __name__ == '__main__':
+def generate_results(count, x0=0, step=1, seed=0):
+    """Compute a walk and return it alongside its context"""
     # If repository is dirty, don't do anything
-    if subprocess.call(("git", "diff-index", "--quiet", "HEAD")):
-        print("Repository is dirty, please commit first")
+    if subprocess.call(('git', 'diff-index', '--quiet', 'HEAD')):
+        print('Repository is dirty, please commit first')
         sys.exit(1)
 
     # Get git hash if any
-    revision = subprocess.check_output(("git", "rev-parse", "HEAD"))
+    revision = subprocess.check_output(('git', 'rev-parse', 'HEAD'))
 
-    # Unit test checking reproducibility
-    assert walk(0, 1, 10, 1) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+    # Compute results
+    walk = generate_walk(count=count, x0=x0, step=step, seed=seed)
+    return {'data'      : walk,
+            'parameters': {'x0':x0, 'step':step, 'count':count, 'seed':seed},
+            'timestamp' : str(datetime.datetime.utcnow()),
+            'revision'  : revision,
+            'system'    : sys.version}
+
+if __name__ == '__main__':
+    # Unit test checking reproducibility (will fail with Python<=3.2)
+    assert generate_walk(10, 0, 1, 42) == [1, 0, -1, -2, -1, 0, 1, 0, -1, -2]
 
     # Simulation parameters
-    parameters = { 'x0':    0,
-                   'step':  1,
-                   'count': 10,
-                   'seed' : 1 }
-    path = walk(**parameters)
-    results = {'data':       path,
-               'parameters': parameters,
-               'timestamp':  str(datetime.datetime.utcnow()),
-               'revision':   revision,
-               'system':     sys.version}
+    count, x0, seed = 10, 0, 1
+    results = generate_results(count, x0=x0, seed=seed)
 
     # Save & display results
-    with open("results-R4.txt", "w") as fd:
+    with open('results-R4.txt', 'w') as fd:
         fd.write(str(results))
-
-    print(path)
+    print(results['data'])
 \end{code}
 \end{minipage}\\
 
@@ -471,7 +478,7 @@ Here we are able to replicate exactly\footnote{Striving, as we do here, for a pe
 \begin{code}{\textbf{\textsc{Listing 6:}} Replicated random walk (R$^5$)}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
-# Tested with Python 3.6.1 / Numpy 1.12.0 / macOS 10.12.4 / 64 bits architecture
+# Tested with CPython 3.6.2 / NumPy 1.12.0 / macOS 10.12.6 / 64 bits architecture
 import random
 import numpy as np
 
@@ -496,7 +503,7 @@ def walk(n, seed):
 
 if __name__ == '__main__':
     # Unit test
-    assert walk(n=10, seed=1) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+    assert walk(n=10, seed=42) == [1, 0, -1, -2, -1, 0, 1, 0, -1, -2]
 
     # Random walk for 10 steps, initialization with seed=1
     seed = 1
@@ -507,7 +514,6 @@ if __name__ == '__main__':
     with open("results-R5.txt", "w") as fd:
         fd.write(str(results))
     print(path)
-  
 \end{code}
 \end{minipage}
 

@@ -1,50 +1,54 @@
-# Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
+# Random walk (R4: re-usable)
+# Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
-# Tested with CPython 3.6.1 / macOS 10.12.4 / 64 bits architecture
-import platform, datetime, json
-import random
-import pip
-import git
+# Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
+import sys, subprocess, datetime, random
 
-def git_info():
-    """Retrieve the current git hash, and if the repository has uncommited changes."""
-    repo = git.Repo(os.path.dirname(__file__), search_parent_directories=True)
-    return {'hash': repo.head.object.hexsha, 'dirty': repo.is_dirty(),
-            'git_version': str(pip.git.Git().get_git_version())}
-
-def provenance():
-    """Get info about the execution environment and the code."""
-    return {'python'   : {'implementation': platform.python_implementation(),
-                          'version'       : platform.python_version_tuple(),
-                          'compiler'      : platform.python_compiler(),
-                          'branch'        : platform.python_branch(),
-                          'revision'      : platform.python_revision()},
-            'platform' : platform.platform(),
-            'packages'  : list(pip.commands.freeze.freeze()), # list of installed packages
-            'git_info' : git_info(),
-            'timestamp': datetime.datetime.utcnow().isoformat()+'Z'}  # Z stands for UTC
-
-def walk(n, seed):
-    """Return a `n` steps random walk.
-    `seed` is used to initialize the Mersene Twister random number generator."""
+def generate_walk(count, x0=0, step=1, seed=0):
+    """ Random walk
+        count: number of steps
+        x0   : initial position (default 0)
+        step : step size (default 1)
+        seed : seed for the initialization of the random generator (default 0)
+    """
     random.seed(seed)
-    rndwalk, total = [], 0
-    for i in range(10):
-        step = +1 if random.uniform(-1,+1) > 0 else -1
-        total += step
-        rndwalk.append(total)
-    return rndwalk
+    x = x0
+    walk = []
+    for i in range(count):
+        if random.uniform(-1, +1) > 0:
+            x += 1
+        else:
+            x -= 1
+        walk.append(x)
+    return walk
 
-def generate_results(n, seed, filename='results-R4'):
-    """Generate results and save them to disk as a JSON file"""
-    w = walk(n, seed)
-    results = {'data': w, 'n': n, 'seed': seed, 'provenance': provenance()}
-    with open(filename + '.json', 'w') as fd:
-        json.dump(results, fd)
-    return results
+def generate_results(count, x0=0, step=1, seed=0):
+    """Compute a walk and return it alongside its context"""
+    # If repository is dirty, don't do anything
+    if subprocess.call(('git', 'diff-index', '--quiet', 'HEAD')):
+        print('Repository is dirty, please commit first')
+        sys.exit(1)
+
+    # Get git hash if any
+    revision = subprocess.check_output(('git', 'rev-parse', 'HEAD'))
+
+    # Compute results
+    walk = generate_walk(count=count, x0=x0, step=step, seed=seed)
+    return {'data'      : walk,
+            'parameters': {'x0':x0, 'step':step, 'count':count, 'seed':seed},
+            'timestamp' : str(datetime.datetime.utcnow()),
+            'revision'  : revision,
+            'system'    : sys.version}
 
 if __name__ == '__main__':
-    # Unit test checking reproducibility
-    assert walk(10, 1) == [-1, 0, 1, 0, -1, -2, -1, 0, -1, -2]
+    # Unit test checking reproducibility (will fail with Python<=3.2)
+    assert generate_walk(10, 0, 1, 42) == [1, 0, -1, -2, -1, 0, 1, 0, -1, -2]
 
-    print(generate_results(10, 1)['data'])
+    # Simulation parameters
+    count, x0, seed = 10, 0, 1
+    results = generate_results(count, x0=x0, seed=seed)
+
+    # Save & display results
+    with open('results-R4.txt', 'w') as fd:
+        fd.write(str(results))
+    print(results['data'])
