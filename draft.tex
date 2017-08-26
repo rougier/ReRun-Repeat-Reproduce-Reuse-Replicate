@@ -73,7 +73,7 @@
   basicstyle=\small\tt\linespread{0.75},
   language=Python,
   commentstyle=\color{gray},
-  columns=fullflexible,
+  columns=flexible,
 }
 
 \lstnewenvironment{code}[2][]{%
@@ -124,14 +124,16 @@
 % \author{Nicolas P. Rougier and Fabien C. Y. Benureau}
 \author{
   \textbf{Fabien C. Y. Benureau}$^{1,2,3,*}$,
-  \textbf{Nicolas P. Rougier}$^{1,2,3}$\\ \begin{minipage}{0.8\textwidth}
+  \textbf{Nicolas P. Rougier}$^{1,2,3}$\\
+  {\small \href{https://orcid.org/0000-0003-4083-4512}{0000-0003-4083-4512},
+  \href{https://orcid.org/0000-0002-6972-589X}{0000-0002-6972-589X}}\\
+  \begin{minipage}{0.8\textwidth}
     \begin{center}
       \vspace{2mm}
-      \small
-      $^{1}$INRIA Bordeaux Sud-Ouest Talence, France $^{2}$ Institut des
-      Maladies Neurodégénératives, Université de Bordeaux, CNRS UMR 5293,
-      Bordeaux, France $^{3}$ LaBRI, Université de Bordeaux, Bordeaux INP, CNRS
-      UMR 5800, Talence, France\\
+      \scriptsize
+      $^{1}$INRIA Bordeaux Sud-Ouest, Talence, France\\
+      $^{2}$ Institut des Maladies Neurodégénératives, Université de Bordeaux, CNRS UMR 5293, Bordeaux, France\\
+      $^{3}$ LaBRI, Université de Bordeaux, Bordeaux INP, CNRS UMR 5800, Talence, France\\
       \vspace{2mm}
       $^{*}$Corresponding author:
       \href{mailto:fabien.benureau@gmail.com}{fabien.benureau@gmail.com}
@@ -177,7 +179,7 @@ for i in xrange(10):
 \end{code}
 \end{minipage}
 
-Executed, this program would display:
+In the code above, the {\tt \href{https://docs.python.org/3.6/library/random.html#random.choice}{random.choice}} function randomly returns either +1 or -1. The instruction \enquote{\tt for i in xrange(10):}  executes the next three indented lines ten times. Executed, this program would display:
 \begin{code}{Output}
 -1, 0, -1, 0, -1, 0, -1, 0, 1, 2 # with the steps being -1, +1, -1, +1, -1, +1, -1, +1, +1, +1
 \end{code}
@@ -323,11 +325,11 @@ walk = generate_walk()
 
 # Display & save results
 print(walk)
-results = {'data'     : walk,
-           'seed'     : seed,
-           'timestamp': str(datetime.datetime.utcnow()),
-           'revision' : revision,
-           'system'   : sys.version}
+results = {'data'       : walk,
+            'seed'      : seed,
+            'timestamp': str(datetime.datetime.utcnow()),
+            'revision' : revision,
+            'system'    : sys.version}
 with open('results-R3.txt', 'w') as fd:
     fd.write(str(results))
 \end{code}
