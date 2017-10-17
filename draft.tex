@@ -168,7 +168,7 @@ reusable (R$^4$) and replicable (R$^5$). Let us illustrate this with a small
 example, a random walk \citep{Hughes:1995} written in Python:\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\textbf{\textsc{Listing 1:}} Random walk (R$^0$)}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 1:}} Random walk (R$^0$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R0.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 import random
 
 x = 0
@@ -199,7 +199,7 @@ Have you ever tried to re-run a program you wrote some years ago? It can often b
 A \emph{re-runnable} code is one that can be run again when needed, and in particular more than the one time that was needed to produce the results. It is important to notice that the re-runnability of a code is not an intrinsic property. Rather, it depends on the context, and becomes increasingly difficult as the code ages. Therefore, to be and remain re-runnable on other researchers' computers, a re-runnable code should describe---with enough details to be recreated---an execution environment in which it is executable. As shown by \citep{Collberg:2016}, this is far from being either obvious or easy.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\textbf{\textsc{Listing 2:}} Re-runnable random walk (R$^1$)}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 2:}} Re-runnable random walk (R$^1$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R1.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Tested with Python 3
 import random
 
@@ -220,12 +220,12 @@ In our case, the R$^0$ version of our tiny walker seems to imply that any versio
 % \clearpage
 \section*{Repeatable (R$^{\mathbf 2}$)}
 
-The code is running and producing the expected results. The next step is to make sure that you can produce the same output over successive runs of your program. In other words, the next step is to make your program deterministic, producing {\em repeatable} output.  Repeatability is valuable. If a run of the program produces a particularly puzzling result, repeatability allows you to scrutinize any step of the execution of the program by re-running it again with extraneous prints, or inside a debugger. Repeatability is also useful to prove that the program did indeed produce the published results. Repeatability is not always possible or easy \citep{Diethelm:2012, Courtes:2015}. But for sequential programs not depending on analog inputs, it often comes down to controlling the initialization of the pseudo-random number generators (RNG).\\
+The code is running and producing the expected results. The next step is to make sure that you can produce the same output over successive runs of your program. In other words, the next step is to make your program deterministic, producing {\em repeatable} output.  Repeatability is valuable. If a run of the program produces a particularly puzzling result, repeatability allows you to scrutinize any step of the execution of the program by re-running it again with extraneous prints, or inside a debugger. Repeatability is also useful to prove that the program did indeed produce the published results. Repeatability is not always possible or easy \citep{Diethelm:2012, Courtes:2015}. But for sequential and deterministically parallels programs \citep{Hines:2008, Collange:2015} not depending on analog inputs, it often comes down to controlling the initialization of the pseudo-random number generators (RNG).\\
 
 For our program, that means setting the seed of the {\tt random} module. We may also want to save the output of the program to a file, so that we can easily verify that consecutive runs do produce the same output: eyeballing differences is unreliable and  time-consuming, and therefore won't be done systematically.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\textbf{\textsc{Listing 3:}} Re-runnable, repeatable random walk (R$^2$)}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 3:}} Re-runnable, repeatable random walk (R$^2$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R2.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Tested with Python 3
 import random
 
@@ -286,10 +286,10 @@ When it comes to checking that the reproduced data match the one published in th
 Another good practice is to make the code self-verifiable. In R$^3$, a short unit test is provided, that allows the code to verify its own reproducibility. Should this test fail, then there is little hope of reproducing the results. Of course, passing the test does not guarantee anything.\\
 
 % reproducibility implies availability
-It is obvious that \emph{reproducibility implies availability}. As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and} input data \emph{and} result data should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as \href{https://figshare.com}{Figshare} or \href{https://zenodo.org}{Zenodo}\footnote{Online code repositories such as GitHub \emph{are not} scientific repositories, and may disappear, change name or change their access policy at any moment. Direct links to them are not perpetual, and, when used, they should always be supplemented by a DOI link to a scientific archive.}. The codes presented in this article are available in the GitHub repository \href{https://github.com/rougier/random-walk}{github.com/rougier/random-walk} and at \href{https://doi.org/10.5281/zenodo.848217}{doi.org/10.5281/zenodo.848217}.\\
+It is obvious that \emph{reproducibility implies availability}. As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and} input data \emph{and} result data should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as \href{https://figshare.com}{Figshare}, \href{https://zenodo.org}{Zenodo}\footnote{Online code repositories such as GitHub \emph{are not} scientific repositories, and may disappear, change name or change their access policy at any moment. Direct links to them are not perpetual, and, when used, they should always be supplemented by a DOI link to a scientific archive.} or a domain specific database, such as \href{https://senselab.med.yale.edu/modeldb/}{ModelDB} for computational neuroscience. The codes presented in this article are available in the GitHub repository \href{https://github.com/rougier/random-walk}{github.com/rougier/random-walk} and at \href{https://doi.org/10.5281/zenodo.848217}{doi.org/10.5281/zenodo.848217}.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\textbf{\textsc{Listing 4:}} Re-runnable, repeatable, reproducible random walk (R$^3$)}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 4:}} Re-runnable, repeatable, reproducible random walk (R$^3$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R3.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
@@ -359,7 +359,7 @@ Avoid hardcoded or magic numbers. Magic numbers are numbers present directly in 
 Similarly, code behavior should not be changed by commenting/uncommenting code \citep{Wilson:2017}. Modification of the behavior of the code, required when different experiments examine slightly different conditions, should always be explicitly set through parameters accessible to the end-user. This improves reproducibility in two ways: it allows those conditions to be recorded as parameters in the result files, and it allows to define separate scripts to run or configuration files to load to produce each of the figures of the published paper. With documentation explaining which script or configuration file corresponds to which experiment, reproducing the different figures becomes straightforward.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\textbf{\textsc{Listing 5:}} Re-runnable, repeatable, reproducible, reusable random walk (R$^4$)}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 5:}} Re-runnable, repeatable, reproducible, reusable random walk (R$^4$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R4.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
@@ -432,13 +432,12 @@ Having made a software reusable offers an additional way to find errors, especia
 
 % reproducible, a definition
 \emph{Replicability} is the implicit
-assumption that any article that does not provide the source code makes: that
+assumption that an article that does not provide the source code makes: that
 the description it provides of the algorithms is sufficiently precise and
-complete to re-obtain the results it presents. Therefore, replicating a result means coding a new implementation from scratch that match the conceptual description of the article. This affords robustness to the results because, should the original code contain an error, a different codebase creates the possibility that this error will not be repeated, in the same way replicating an laboratory experiment can ferret out hidden biases. While every published article
-should strive for replicability, it is seldom obtained. In fact, absent an explicit effort to make an algorithmic description replicable, there is little probability that it will be.\\
+complete to re-obtain the results it presents. Here, replicating implies writing a new code matching the conceptual description of the article, in order to reobtain the same results. Replication affords robustness to the results because, should the original code contain an error, a different codebase creates the possibility that this error will not be repeated, in the same way that replicating an laboratory experiment in a different laboratory can ferret out subtle biases. While every published article should strive for replicability, it is seldom obtained. In fact, absent an explicit effort to make an algorithmic description replicable, there is little probability that it will be.\\
 
 % conceptual description != replicable description
-This is because most papers strive to communicate the main ideas behind their contribution is terms as simple and as clear as possible, so that the reader may be able to easily understand them and the results that are presented to him. Trying to ensure replicability in the main text adds a myriad of esoteric details that are not conceptually significant and clutter the explanations. Therefore, unless the writer dedicates an addendum or a section of the supplementary information for technical details specifically aimed at replicability, the information will not be there because there are incentives not to do so.\\
+This is because most papers strive to communicate the main ideas behind their contribution in terms as simple and as clear as possible, so that the reader may be able to easily understand them and the results that are presented. Trying to ensure replicability in the main text adds a myriad of esoteric details that are not conceptually significant and clutter the explanations. Therefore, unless the writer dedicates an addendum or a section of the supplementary information for technical details specifically aimed at replicability, the information will not be there because there are incentives not to do so.\\
 
 % errors may always remain: reproducibility does not make reproducibility useless.
 But even when those details are present, the best efforts may fall short because an oversight, a typo or a difference between what is evident for the writer and for the reader \citep{Mesnard:2016}. Minute changes in the numerical estimation of a common first-order differential equation can have significant impact \citep{Crook:2013}. Hence, a reproducible code plays an important role alongside its article: it is a objective catalog of all the implementation details.\\
@@ -454,7 +453,7 @@ Replicability, therefore, does not negate the necessity of reproducibility. In f
 This description, while somewhat precise, forgoes---as it is common---the initialization of the variables (here the starting value of the walk: {\tt 0}), and the technical details about which implementation of the RNG is used.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\textbf{\textsc{Listing 6:}} Replicated random walk (R$^5$)}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 6:}} Replicated random walk (R$^5$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R5.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with CPython 3.6.2 / NumPy 1.12.0 / macOS 10.12.6 / 64 bits architecture
