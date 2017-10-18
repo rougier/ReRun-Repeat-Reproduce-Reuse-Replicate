@@ -143,14 +143,23 @@
 \date{}
 
 \begin{document}
+\vfill
 \maketitle
+
+\begin{abstract}
+  Scientific code is different from production software. Scientific code, by producing results that are then analyzed and interpreted, participates in the elaboration of scientific conclusions. This imposes specific constraints on the code that are often overlooked in practice. We articulate, with a small example, five characteristics that a scientific code in computational science should possess: re-runnable, repeatable, reproducible, reusable and replicable. The code should be executable (re-runnable) and produce the same result more than once (repeatable); it should allow an investigator to reobtain the published results (reproducible) while being easy to use, understand and modify (reusable), and it should act as an available reference for any ambiguity in the algorithmic descriptions of the article (replicable).
+\end{abstract}
 % -------------------------
+\vfill
+
+
+\pagebreak
 \section*{Introduction (R$^{\mathbf 0}$)}
 
-Replicability is a cornerstone of science.  If an experimental result cannot be
+Replicability\footnote{\emph{Reproducibility} and \emph{replicability} are employed differently by different authors and in different domains (see for instance the report from the U.S.  \cite{Schwalbe:2016}). Here, we place ourselves in the context of computational works, where data is produced by a program. A result is \emph{reproducible} if one can take the original source code, re-execute it and reobtain the original results. A result is \emph{replicable} if one can create a code that matches the algorithmic descriptions given in the published article and reobtain the original results.} is a cornerstone of science.  If an experimental result cannot be
 re-obtained by an independent party, it merely becomes, at best, an observation
 that may inspire future research \citep{Mesirov:2010,osc:2015}. Replication
-issues have received increased attention in recent years, with a particular focus on medicine and psychology \citep{Iqbal:2016}.  One could think
+issues have received increased attention in recent years, with a particular focus on medicine and psychology \citep{Iqbal:2016}. One could think
 that computational research would mostly be shielded from such issues, since a
 computer program describes precisely what it does and is easily
 disseminated to other researchers without alteration.
@@ -159,7 +168,7 @@ But precisely because it is easy to believe that if a program runs once and
 gives the expected results it will do so forever, crucial steps to transform
 working code into meaningful scientific contributions are rarely undertaken
 \citep{Collberg:2016,Sandve:2013,Schwab:2000}. Computational research is plagued by replication
-problems, in part, because it seems impervious to them. Contrary to production software who provide a service geared towards a practical outcome , the motivation behind scientific code is to test an hypothesis. While in some instance production software and scientific code are indistinguishable, the reason why they were created is different, and, therefore, so are the criteria to evaluate their success. A program can
+problems, in part, because it seems impervious to them. Contrary to production software who provides a service geared towards a practical outcome, the motivation behind scientific code is to test an hypothesis. While in some instance production software and scientific code are indistinguishable, the reasons why they were created are different, and, therefore, so are the criteria to evaluate their success. A program can
 fail as a scientific contribution in many different ways for many different
 reasons. Borrowing the terms coined by \citeauthor{Goble:2016}
 \citep{Goble:2016}, for a program to contribute to science, it should be
@@ -264,7 +273,7 @@ this is usually done by repeating the simulations multiple times with different 
 \section*{Reproducible (R$^{\mathbf 3}$)}
 
 % Reproducible definition + R^2 not reproducible
-The R$^2$ code seems fine enough, but it hides several problems that come to light when trying to {\em reproduce} results. A result is said to be \emph{reproducible} if another researcher can take the original code and input data, execute it, and re-obtain the same result \parencite{Peng:2006}. As explained by \citeauthor{Donoho:2009} \parencite{Donoho:2009}, scientific practice must expect that {\em errors are ubiquitous}, and therefore be robust to them. Ensuring reproducibility is a fundamental step toward this: it provides other researchers the means to verify that the code does indeed produce the published results, and to scrutinize the procedures it used to produce them. As demonstrated by \citeauthor{Mesnard:2016} \citep{Mesnard:2016}, reproducibility is hard.\\
+The R$^2$ code seems fine enough, but it hides several problems that come to light when trying to {\em reproduce} results. A result is said to be \emph{reproducible} if another researcher can take the original code and input data, execute it, and re-obtain the same result \parencite{Peng:2006}. As explained by \citeauthor{Donoho:2009} \parencite{Donoho:2009}, scientific practice must expect that {\em errors are ubiquitous}, and therefore be robust to them. Ensuring reproducibility is a fundamental step toward this: it provides other researchers the means to verify that the code does indeed produce the published results, and to scrutinize the procedures it employed to produce them. As demonstrated by \citeauthor{Mesnard:2016} \citep{Mesnard:2016}, reproducibility is hard.\\
 
 For instance, the R$^2$ program will not produce the same results all the time. It will, because it is repeatable, produce the same results over repeated executions. But it will not necessarily do so over different execution environments. The cause is to be found in a change that occurred in the pseudo-random number generator between Python 3.2 and Python 3.3. Executed with Python 2.7 to 3.2, the code will produce the sequence -1, 0, 1, 0, -1, -2, -1, 0, -1, -2. But with Python 3.3 to 3.6, it will produce -1, -2, -1, -2, -1, 0, 1, 2, 1, 0. With future versions of the language, it may change still. For the R$^3$ version, we abandon the use of the {\tt \href{https://docs.python.org/3.6/library/random.html#random.choice}{random.choice}} function in favor of the {\tt \href{https://docs.python.org/3.6/library/random.html#random.uniform}{random.uniform}} function, whose behavior is consistent across versions 2.7 to 3.6 of Python.\\
 
@@ -272,7 +281,7 @@ For instance, the R$^2$ program will not produce the same results all the time. 
 Because any dependency of a program---to the most basic one, the language itself---can change its behavior from one version to another, executability (R$^1$) and determinism (R$^2$) are necessary but not sufficient for reproducibility. The exact execution environment used to produce the results must also be specified---rather than the broadest set of environments where the code can be effectively run. In other words, assertions such as \enquote{the results were obtained with CPython 3.6.1} are more valuable, in a scientific context, than \enquote{the program works with Python 3.x and above}. With the increasing complexity of computational stacks, retrieving and deciding what is pertinent (CPU architecture? operating system version? endianness?) might be non-trivial. A good rule of thumb is to include more information than necessary rather than not enough, and some rather than none.\\
 
 % if code changes, parameters are lost
-Recording the execution environment is only the first step. The R$^2$ program uses a random seed but does not keep a trace of it except in the code. Should the code change after the production of the results, someone provided with the last version of the code will not be able to know which seed was used to produce the results, and would need to iterate through all possible random seeds, an impossible task in practice\footnote{Here, with $2^{10}$ possibilities for a 10-step random walk, a seed matching the any possible sequence could certainly be found. For instance, seed 11235813 matches the results of R$^0$ with Python 2.7. Such a search becomes intractable for a 100-step walk.}.\\
+Recording the execution environment is only the first step. The R$^2$ program uses a random seed but does not keep a trace of it except in the code. Should the code change after the production of the results, someone provided with the last version of the code will not be able to know which seed was used to produce the results, and would need to iterate through all possible random seeds, an impossible task in practice\footnote{Here, with $2^{10}$ possibilities for a 10-step random walk, the seed used or another matching the generated sequence could certainly be found. For instance, 436 is the smallest positive integer seed to reproduce the results of R$^0$ with Python 2.7 (1151, 3800, 4717 or 11235813 work as well). Such a search becomes intractable for a 100-step walk.}.\\
 
 % 1. parameters and 2. code version with results
 This is why result files should come alongside their context, i.e. an exhaustive list of the parameters used as well as a precise description of the execution environment, as the R$^3$ code does. The code itself is part of that context: the version of the code must be recorded. It is common for different results or different figures to have been generated by different versions of the code. Ideally, all results should originate from the same (and last) version of the code. But for long or expensive computations, this may not be feasible. In that case, the result files should contain the version of the code that was used to produce it. This information can be obtained from the version control software. This also allows, if some errors are found and corrected after some results have been obtained, to identify which ones should be recomputed. In R$^3$, the code records the git revision, and whether the repository holds uncommitted changes when the computation starts.\\
@@ -284,9 +293,6 @@ When it comes to checking that the reproduced data match the one published in th
 
 % unit test for R^3
 Another good practice is to make the code self-verifiable. In R$^3$, a short unit test is provided, that allows the code to verify its own reproducibility. Should this test fail, then there is little hope of reproducing the results. Of course, passing the test does not guarantee anything.\\
-
-% reproducibility implies availability
-It is obvious that \emph{reproducibility implies availability}. As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and} input data \emph{and} result data should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as \href{https://figshare.com}{Figshare}, \href{https://zenodo.org}{Zenodo}\footnote{Online code repositories such as GitHub \emph{are not} scientific repositories, and may disappear, change name or change their access policy at any moment. Direct links to them are not perpetual, and, when used, they should always be supplemented by a DOI link to a scientific archive.} or a domain specific database, such as \href{https://senselab.med.yale.edu/modeldb/}{ModelDB} for computational neuroscience. The codes presented in this article are available in the GitHub repository \href{https://github.com/rougier/random-walk}{github.com/rougier/random-walk} and at \href{https://doi.org/10.5281/zenodo.848217}{doi.org/10.5281/zenodo.848217}.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 4:}} Re-runnable, repeatable, reproducible random walk (R$^3$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R3.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
@@ -335,8 +341,11 @@ with open('results-R3.txt', 'w') as fd:
 \end{code}
 \end{minipage}\\
 
+% reproducibility implies availability
+It is obvious that \emph{reproducibility implies availability}. As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and} input data \emph{and} result data should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as \href{https://figshare.com}{Figshare}, \href{https://zenodo.org}{Zenodo}\footnote{Online code repositories such as GitHub \emph{are not} scientific repositories, and may disappear, change name or change their access policy at any moment. Direct links to them are not perpetual, and, when used, they should always be supplemented by a DOI link to a scientific archive.} or a domain specific database, such as \href{https://senselab.med.yale.edu/modeldb/}{ModelDB} for computational neuroscience. The codes presented in this article are available in the GitHub repository \href{https://github.com/rougier/random-walk}{github.com/rougier/random-walk} and at \href{https://doi.org/10.5281/zenodo.848217}{doi.org/10.5281/zenodo.848217}.\\
+
 % Summary
-To recap, reproducibility implies re-runnability and repeatability and availability, yet imposes additional conditions. Dependencies and platforms must be described as precisely and as specifically as possible. Parameters values and inputs should accompany the result files. The data and scripts behind the graphs must be published. Unit tests are a good way to embed self-diagnostics of reproducibility in the code. Reproducibility is hard, yet tremendously necessary.
+To recap, reproducibility implies re-runnability and repeatability and availability, yet imposes additional conditions. Dependencies and platforms must be described as precisely and as specifically as possible. Parameters values, the version of the code, and inputs should accompany the result files. The data and scripts behind the graphs must be published. Unit tests are a good way to embed self-diagnostics of reproducibility in the code. Reproducibility is hard, yet tremendously necessary.
 
 
 %\clearpage
@@ -352,11 +361,9 @@ Reusability of course directly benefits other researchers from your team and out
 
 Having more people examining and using your code also means that potential errors have a higher chance to be caught. If people start using your program, they will most likely report bugs or malfunctions they encounter. If you're lucky enough, they might even propose either bug fixes or improvements, hence improving the overall quality of your software. This process contributes to the long-term reproducibility to the extent people continue to use and maintain the program.\\
 
-Despite all this, reusability is often overlooked, and it is not hard to see why. Scientists are rarely trained in software engineering, and reusability can represent an expensive endeavour if undertaken as an afterthought, for little tangible short-term benefits, for a codebase that might, after all, see only a single use. And, in fact, reusability is not as indispensable a requirement as re-runnability, repeatability and reproducibility. Yet, some simple measures can tremendously increase reusability, and at the same time strengthen reproducibility and re-runnability over the long-term.\\
+Despite all this, reusability is often overlooked, and it is not hard to see why. Scientists are rarely trained in software engineering, and reusability can represent an expensive endeavour if undertaken as an afterthought, for little tangible short-term benefits, for a codebase that might, after all, only see a single use. And, in fact, reusability is not as indispensable a requirement as re-runnability, repeatability and reproducibility. Yet, some simple measures can tremendously increase reusability, and at the same time strengthen reproducibility and re-runnability over the long-term.\\
 
 Avoid hardcoded or magic numbers. Magic numbers are numbers present directly in the source code, that do not have a name and therefore can be difficult to interpret semantically. Hardcoded values are variables that cannot be changed through a function argument or a parameter configuration file. To be modified, they involve editing the code, which is cumbersome and error-prone. In the R$^3$ code, the seed and the number of steps are respectively hardcoded and magic.\\
-
-Similarly, code behavior should not be changed by commenting/uncommenting code \citep{Wilson:2017}. Modification of the behavior of the code, required when different experiments examine slightly different conditions, should always be explicitly set through parameters accessible to the end-user. This improves reproducibility in two ways: it allows those conditions to be recorded as parameters in the result files, and it allows to define separate scripts to run or configuration files to load to produce each of the figures of the published paper. With documentation explaining which script or configuration file corresponds to which experiment, reproducing the different figures becomes straightforward.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 5:}} Re-runnable, repeatable, reproducible, reusable random walk (R$^4$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R4.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
@@ -416,6 +423,7 @@ if __name__ == '__main__':
 \end{code}
 \end{minipage}\\
 
+Similarly, code behavior should not be changed by commenting/uncommenting code \citep{Wilson:2017}. Modification of the behavior of the code, required when different experiments examine slightly different conditions, should always be explicitly set through parameters accessible to the end-user. This improves reproducibility in two ways: it allows those conditions to be recorded as parameters in the result files, and it allows to define separate scripts to run or configuration files to load to produce each of the figures of the published paper. With documentation explaining which script or configuration file corresponds to which experiment, reproducing the different figures becomes straightforward.\\
 
 Documentation is one of the most potent tools for reusability. A proper documentation on how to install and run the software often makes the difference whether other researchers manage to use it or not. A comment describing what each function does, however evident, can avoid hours of head-scratching. Great code may need few comments. Scientists, however, are not always brilliant developers. Of course, bad, complicated code should be rewritten until is simple enough to explain itself. But realistically, this is not always going to be done: there is simply not enough incentive for it. There, a comment that explains the intentions and reasons behind a block of code can be tremendously useful.\\
 
@@ -437,20 +445,35 @@ the description it provides of the algorithms is sufficiently precise and
 complete to re-obtain the results it presents. Here, replicating implies writing a new code matching the conceptual description of the article, in order to reobtain the same results. Replication affords robustness to the results because, should the original code contain an error, a different codebase creates the possibility that this error will not be repeated, in the same way that replicating an laboratory experiment in a different laboratory can ferret out subtle biases. While every published article should strive for replicability, it is seldom obtained. In fact, absent an explicit effort to make an algorithmic description replicable, there is little probability that it will be.\\
 
 % conceptual description != replicable description
-This is because most papers strive to communicate the main ideas behind their contribution in terms as simple and as clear as possible, so that the reader may be able to easily understand them and the results that are presented. Trying to ensure replicability in the main text adds a myriad of esoteric details that are not conceptually significant and clutter the explanations. Therefore, unless the writer dedicates an addendum or a section of the supplementary information for technical details specifically aimed at replicability, the information will not be there because there are incentives not to do so.\\
+This is because most papers strive to communicate the main ideas behind their contribution in terms as simple and as clear as possible, so that the reader may be able to easily understand them. Trying to ensure replicability in the main text adds a myriad of esoteric details that are not conceptually significant and clutter the explanations. Therefore, unless the writer dedicates an addendum or a section of the supplementary information for technical details specifically aimed at replicability, the information will not be there because clarity and concision represent enticing incentives not to do so.\\
 
 % errors may always remain: reproducibility does not make reproducibility useless.
 But even when those details are present, the best efforts may fall short because an oversight, a typo or a difference between what is evident for the writer and for the reader \citep{Mesnard:2016}. Minute changes in the numerical estimation of a common first-order differential equation can have significant impact \citep{Crook:2013}. Hence, a reproducible code plays an important role alongside its article: it is a objective catalog of all the implementation details.\\
 
 A researcher seeking to replicate published results might first consider only the article. If she fails to replicate the results, she will consult the original code, and with it be able to pinpoint why her code and the code of the authors differ in behavior. Because a mistake on their part? Hers? Or a difference in a seemingly innocuous implementation detail? A fine analysis of why a particular algorithmic description is lacking or ambiguous or why a minor implementation decision is in fact crucial to obtain the published results is of great scientific value. Such an analysis can only be done with access to both the article and the code. With only the article, the researcher will often be unable to understand why she failed to replicate the results, and will naturally be inclined to only report replication successes.\\
 
-Replicability, therefore, does not negate the necessity of reproducibility. In fact, it often relies on it. To illustrate this, let us consider what could be the textual description of the random walker (as it would be written in an article describing it):
+Replicability, therefore, does not negate the necessity of reproducibility. In fact, it often relies on it. To illustrate this, let us consider what could be the description of the random walker, as it would be written in an article describing it:
 %
 \begin{quotation}
 {\em The model uses the Mersene Twister generator initialized with the seed 1. At each iteration, a uniform number between -1 (included) and +1 (excluded) is drawn and the sign of the result is used for generating a positive or negative step.}
 \end{quotation}
 %
 This description, while somewhat precise, forgoes---as it is common---the initialization of the variables (here the starting value of the walk: {\tt 0}), and the technical details about which implementation of the RNG is used.\\
+
+% NumPy and Python: differences in the Mersene Twister
+It may look innocuous. After all, the
+\href{https://docs.python.org/3.6/library/random.html}{Python documentation},
+states that \enquote{Python uses the Mersenne Twister as the core generator. It produces
+53-bit precision floats and has a period of 2**19937-1}. Someone trying to replicate the work however might choose to use the RNG from the \href{http://www.numpy.org/}{NumPy library}.  The NumPy library is extensively used in the science community, and it provides an implementation of the Mersene Twister generator too. Unfortunately, the way the seed is interpreted by the two implementations is different, yielding different random sequences.\\
+
+Here we are able to replicate exactly\footnote{Striving, as we do here, for a perfect quantitative match may seem unnecessary. Yet, in replication projects, in particular in computational research, quantitative comparisons are a simple and effective way to verify that the behavior has been reproduced. Moreover, they are particularly helpful to track exactly where the code of a tentative replication fails to reproduce the published results. For a discussion about statistical ways to assess replication see the report of the U.S. \cite{Schwalbe:2016}.} the behavior of the pure-Python random walker by setting the internal state of the NumPy RNG appropriately, but only because we have access to specific technical details of the original code (the use of the {\tt random} module of the standard Python library of CPython 3.6.1), or to the code itself.\\
+
+But there are still more subtle problems with the description given above.
+If we look more closely at it, we can realize
+that nothing is said about the specific case of {\tt 0} when generating a step.
+Do we have to consider {\tt 0} to be a positive or a negative step? Without
+further information and without the original code, it is up to the reader to
+decide. Likewise, the description is ambiguous regarding the first element of the walk. Is the initialization value included (it was not in our codes so far)? This slight difference might affect the statistics of short runs.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 6:}} Replicated random walk (R$^5$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R5.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
@@ -495,40 +518,25 @@ if __name__ == '__main__':
 \end{code}
 \end{minipage}
 
-% NumPy and Python: differences in the Mersene Twister
-It may look innocuous. After all, the
-\href{https://docs.python.org/3.6/library/random.html}{Python documentation},
-states that \enquote{Python uses the Mersenne Twister as the core generator. It produces
-53-bit precision floats and has a period of 2**19937-1}. Someone trying to replicate the work however might choose to use the RNG from the \href{http://www.numpy.org/}{NumPy library}.  The NumPy library is extensively used in the science community, and it provides an implementation of the Mersene Twister generator too. Unfortunately, the way the seed is interpreted by the two implementations is different, yielding different random sequences.\\
+All these ambiguities in the description of an algorithm pile up; some are inconsequential (the 0 case has null probability), but some may affect the results in important ways. They are mostly inconspicuous to the reader and oftentimes, to the writer as well. In fact, the best way to ferret out the ambiguities, big and small, of an article is to replicate it. This is one of the reasons why the ReScience journal \citep{Rougier:2017} was created (the second author, Nicolas Rougier, is one of the editor-in-chief of ReScience). This open-access journal, run by volunteers, {\em targets computational research and encourages the explicit replication of already published research, promoting new and open-source implementations in order to ensure that the original research is reproducible}.\\
 
-Here we are able to replicate exactly\footnote{Striving, as we do here, for a perfect quantitative match may seem unnecessary. Yet, in replication projects, quantitative comparisons are a simple and effective way to verify that the behavior has been reproduced. Moreover, they are particularly helpful to track exactly where the code of a tentative replication fails to reproduce the published results.} the behavior of the pure-Python random walker by setting the internal state of the NumPy RNG appropriately, but only because we have access to specific technical details (the use of the {\tt random} module of the standard Python library of CPython 3.6.1), or to the code itself.\\
-
-But there are still more subtle problems with the description given above.
-If we look more closely at it, we can realize
-that nothing is said about the specific case of {\tt 0} when generating a step.
-Do we have to consider {\tt 0} to be a positive or a negative step? Without
-further information and without the original code, it is up to the reader to
-decide. Likewise, the description is ambiguous regarding the first element of the walk. Is the initialization value included (it was not in our codes so far)? This slight difference might affect the statistics of short runs.\\
-
-All these ambiguities in the description of an algorithm pile up; some are inconsequential (the 0 case has null probability), but some may affect the results in important ways. They are mostly inconspicuous to the reader and oftentimes, to the writer as well. In fact, the best way to ferret out the ambiguities, big and small, of an article is to replicate it. This is one of the reasons why the ReScience journal \citep{Rougier:2017} was created (the second author, Nicolas Rougier, is one of the editor-in-chief of ReScience). This journal, run entirely by volunteers on GitHub, {\em targets computational research and encourages the explicit replication of already published research, promoting new and open-source implementations in order to ensure that the original research is reproducible}.\\
-
-Code is an integral part of any submission to the ReScience journal. During the review process, reviewers run the submitted code, may criticise its quality and its ease-of-use, and verify the reproduciblity of the replication. The Journal of Open Source Software \citep{Smith:2017} functions similarly: testing the code is a fundamental part of the review process.
+Code is an central part of a submission to the ReScience journal. During the review process, reviewers run the submitted code, may criticise its quality and its ease-of-use, and verify the reproduciblity of the replication. The Journal of Open Source Software \citep{Smith:2017} functions similarly: testing the code is a fundamental part of the review process.
 
 % \clearpage
 \section*{Conclusion}
 
-Throughout the evolution of a small random walk example implemented in Python, we illustrated some of the issues that may plague scientific code. The code may be correct and of good quality, but still many problems may reduce its contribution to scientific knowledge.
+Throughout the evolution of a small random walk example implemented in Python, we illustrated some of the issues that may plague scientific code. The code may be correct and of good quality, but still many problems may reduce its contribution to the scientific discourse.
 To make these problems explicit, we articulated five characteristics that a code should possess to be a useful part of a scientific publication: it should be re-runnable, repeatable, reproducible, reusable and replicable.\\
 
-Running old code on tomorrow’s computer and software stacks may not be possible. But recreating the old code’s execution environment may be: to ensure that the long-term re-runnability of a code, its execution environment must be documented. For our example, a single comment went a long way to transform the R$^0$ code into the R$^1$ (re-runnable) one.\\
+Running old code on tomorrow’s computer and software stacks may not be possible. But recreating the old code’s execution environment may be: to ensure the long-term re-runnability of a code, its execution environment must be documented. For our example, a single comment went a long way to transform the R$^0$ code into the R$^1$ (re-runnable) one.\\
 
-Science is built on verifying the results of others. This is harder to do if each execution of the code produce a different result. While for complex parallel workflow this may not be possible, in all instances where it is feasible the code should be repeatable. This allows future researchers to examine exactly how a specific result was produced. Most of the time, what is needed is to set or record the initial state of the pseudo-random number generator, as what done in the R$^2$ (repeatable) version.\\
+Science is built on verifying the results of others. This is harder to do if each execution of the code produce a different result. While for complex concurrent workflows this may not be possible, in all instances where it is feasible the code should be repeatable. This allows future researchers to examine exactly how a specific result was produced. Most of the time, what is needed is to set or record the initial state of the pseudo-random number generator, as what done in the R$^2$ (repeatable) version.\\
 
 Even more care is needed to make a code reproducible. The exact execution environment, code and parameters used must be recorded and embedded in the results files, as the R$^3$ (reproducible) version does. Furthermore, the code must be made available as supplementary data with the whole computational workflow, from preprocessing steps to plotting scripts.\\
 
 Making code reusable is a stretch goal that can yield tremendous benefits for you, your team and other researchers. Taken into account during development rather than as an afterthought, simple measures can avoid hours of head-scratching for others, and for yourself—in a few years. Documentation is paramount here, even if it is a single comment per function, as it was done in the R$^4$ (reusable) version.\\
 
-Finally, there is the belief that an article should suffice by itself: the descriptions of the algorithms present in the paper should suffice to re-obtain (to replicate) the published results. For well-written papers that precisely dissociate conceptually significant aspects from irrelevant implementation details, that may be. But scientific practice should not assume the best of cases. Science assumes that errors can crop up everywhere. Every paper is a mistake or a forgotten parameter away from irreproducibility. Replication efforts use the paper first, and then the reproducible code that comes along with it whenever the paper falls short of being precise enough to be reimplemented.\\
+Finally, there is the belief that an article should suffice by itself: the descriptions of the algorithms present in the paper should suffice to reobtain (to replicate) the published results. For well-written papers that precisely dissociate conceptually significant aspects from irrelevant implementation details, that may be. But scientific practice should not assume the best of cases. Science assumes that errors can crop up everywhere. Every paper is a mistake or a forgotten parameter away from irreproducibility. Replication efforts use the paper first, and then the reproducible code that comes along with it whenever the paper falls short of being precise enough.\\
 
 In conclusion, the R$^3$ (reproducible) form should be accepted as the minimum
 scientific standard \citep{Wilson:2017}. This means this should be actually
