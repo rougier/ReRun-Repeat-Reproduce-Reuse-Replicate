@@ -226,7 +226,7 @@ print(walk)
 \end{code}
 \end{minipage}\\
 
-In our case, the R$^0$ version of our tiny walker seems to imply that any version of Python would be fine. This not the case: it uses the print {\em instruction} and the {\tt xrange} operator, both specific to Python 2. The print {\em instruction}, available in Python 2 (a version still widely used; support is scheduled to stop in 2020), has been deprecated in Python 3 (first released in 2008, almost a decade ago) in favor or a  print {\em function}, while the {\tt xrange} operator has been replaced by the {\tt range} operator in Python 3. In order to try to future-proof the code a bit, we might as well target Python 3, as is done in the R$^1$ version. Incidentally, it remains compatible with Python 2. But whichever version is chosen, the crucial step here is to document it.
+In our case, the R$^0$ version of our tiny walker seems to imply that any version of Python would be fine. This not the case: it uses the print {\em instruction} and the {\tt xrange} operator, both specific to Python 2. The print {\em instruction}, available in Python 2 (a version still widely used; support is scheduled to stop in 2020), has been deprecated in Python 3 (first released in 2008, almost a decade ago) in favor of a  print {\em function}, while the {\tt xrange} operator has been replaced by the {\tt range} operator in Python 3. In order to try to future-proof the code a bit, we might as well target Python 3, as is done in the R$^1$ version. Incidentally, it remains compatible with Python 2. But whichever version is chosen, the crucial step here is to document it.
 
 
 % \clearpage
