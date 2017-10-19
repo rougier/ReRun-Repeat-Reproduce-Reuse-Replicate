@@ -98,6 +98,7 @@
 %  columns=fullflexible,
 %}
 
+\renewcommand{\floatpagefraction}{.9}%
 
 % Hyperref
 \usepackage{xcolor}
@@ -177,7 +178,7 @@ reusable (R$^4$) and replicable (R$^5$). Let us illustrate this with a small
 example, a random walk \citep{Hughes:1995} written in Python:\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 1:}} Random walk (R$^0$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R0.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 0:}} Random walk (R$^0$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R0.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 import random
 
 x = 0
@@ -208,7 +209,7 @@ Have you ever tried to re-run a program you wrote some years ago? It can often b
 A \emph{re-runnable} code is one that can be run again when needed, and in particular more than the one time that was needed to produce the results. It is important to notice that the re-runnability of a code is not an intrinsic property. Rather, it depends on the context, and becomes increasingly difficult as the code ages. Therefore, to be and remain re-runnable on other researchers' computers, a re-runnable code should describe---with enough details to be recreated---an execution environment in which it is executable. As shown by \citep{Collberg:2016}, this is far from being either obvious or easy.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 2:}} Re-runnable random walk (R$^1$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R1.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 1:}} Re-runnable random walk (R$^1$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R1.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Tested with Python 3
 import random
 
@@ -234,7 +235,7 @@ The code is running and producing the expected results. The next step is to make
 For our program, that means setting the seed of the {\tt random} module. We may also want to save the output of the program to a file, so that we can easily verify that consecutive runs do produce the same output: eyeballing differences is unreliable and  time-consuming, and therefore won't be done systematically.\\
 
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 3:}} Re-runnable, repeatable random walk (R$^2$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R2.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 2:}} Re-runnable, repeatable random walk (R$^2$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R2.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Tested with Python 3
 import random
 
@@ -294,11 +295,9 @@ When it comes to checking that the reproduced data match the one published in th
 % unit test for R^3
 Another good practice is to make the code self-verifiable. In R$^3$, a short unit test is provided, that allows the code to verify its own reproducibility. Should this test fail, then there is little hope of reproducing the results. Of course, passing the test does not guarantee anything.\\
 
-% reproducibility implies availability
-It is obvious that \emph{reproducibility implies availability}. As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and} input data \emph{and} result data should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as \href{https://figshare.com}{Figshare}, \href{https://zenodo.org}{Zenodo}\footnote{Online code repositories such as GitHub \emph{are not} scientific repositories, and may disappear, change name or change their access policy at any moment. Direct links to them are not perpetual, and, when used, they should always be supplemented by a DOI link to a scientific archive.} or a domain specific database, such as \href{https://senselab.med.yale.edu/modeldb/}{ModelDB} for computational neuroscience. The codes presented in this article are available in the GitHub repository \href{https://github.com/rougier/random-walk}{github.com/rougier/random-walk} and at \href{https://doi.org/10.5281/zenodo.848217}{doi.org/10.5281/zenodo.848217}.\\
-
+\begin{figure}[t!]
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 4:}} Re-runnable, repeatable, reproducible random walk (R$^3$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R3.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 3:}} Re-runnable, repeatable, reproducible random walk (R$^3$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R3.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
@@ -343,6 +342,10 @@ with open('results-R3.txt', 'w') as fd:
     fd.write(str(results))
 \end{code}
 \end{minipage}\\
+\end{figure}
+
+% reproducibility implies availability
+It is obvious that \emph{reproducibility implies availability}. As shown in \citep{Collberg:2016}, code is often unavailable, or only available upon request. While the latter may seem sufficient, changes in email address, changes in career, retirement, a busy inbox or poor archiving practices can make a code just as unreachable. Code \emph{and} input data \emph{and} result data should be available with the published article, as supplementary data, or through a DOI link to a scientific repository such as \href{https://figshare.com}{Figshare}, \href{https://zenodo.org}{Zenodo}\footnote{Online code repositories such as GitHub \emph{are not} scientific repositories, and may disappear, change name or change their access policy at any moment. Direct links to them are not perpetual, and, when used, they should always be supplemented by a DOI link to a scientific archive.} or a domain specific database, such as \href{https://senselab.med.yale.edu/modeldb/}{ModelDB} for computational neuroscience. The codes presented in this article are available in the GitHub repository \href{https://github.com/rougier/random-walk}{github.com/rougier/random-walk} and at \href{https://doi.org/10.5281/zenodo.848217}{doi.org/10.5281/zenodo.848217}.\\
 
 % Summary
 To recap, reproducibility implies re-runnability and repeatability and availability, yet imposes additional conditions. Dependencies and platforms must be described as precisely and as specifically as possible. Parameters values, the version of the code, and inputs should accompany the result files. The data and scripts behind the graphs must be published. Unit tests are a good way to embed self-diagnostics of reproducibility in the code. Reproducibility is hard, yet tremendously necessary.
@@ -353,22 +356,9 @@ To recap, reproducibility implies re-runnability and repeatability and availabil
 
 Making your program reusable means it can be easily used, and modified, by you and other people, inside and outside your lab. Ensuring your program is reusable is advantageous for a number of reasons.\\
 
-For you, first. Because the you now and the you in two years are two different persons. Details on how to use the code, its limitations, its quirks, may be present to your mind now, but will probably escape you in six months \parencite{Donoho:2009}. Here, comments and documentation can make a significant difference. Source code reflects the results of the decisions that were made during its creation, but not the reasons behind those decisions. In science, where the method and its justification matter as much as the results, those reasons are precious knowledge. In that context, a comment on how a given parameter was chosen (optimization, experimental data, educated guess), why a library was chosen over another (conceptual or technical reasons?) is valuable information.\\
-
-% Research team typically experience a high turnover of interns, doctoral and post-doctoral students. Can you reproduce the results of member after leave your team?
-
-Reusability of course directly benefits other researchers from your team and outside of it. The easier it is to use your code, the lower the threshold is for other to study, modify and extend it. Scientists constantly face the constraint of time: if a model is available, documented, and can be installed, run and understood all in a few hours, it will be preferred over another that would require weeks to reach the same stage. A reproducible and reusable code offers a platform both \emph{verifiable} and easy-to-use, fostering the development of derivative works by other researchers on solid foundations. Those derivative works contribute to the impact of your original contribution.\\
-
-Having more people examining and using your code also means that potential errors have a higher chance to be caught. If people start using your program, they will most likely report bugs or malfunctions they encounter. If you're lucky enough, they might even propose either bug fixes or improvements, hence improving the overall quality of your software. This process contributes to the long-term reproducibility to the extent people continue to use and maintain the program.\\
-
-Despite all this, reusability is often overlooked, and it is not hard to see why. Scientists are rarely trained in software engineering, and reusability can represent an expensive endeavour if undertaken as an afterthought, for little tangible short-term benefits, for a codebase that might, after all, only see a single use. And, in fact, reusability is not as indispensable a requirement as re-runnability, repeatability and reproducibility. Yet, some simple measures can tremendously increase reusability, and at the same time strengthen reproducibility and re-runnability over the long-term.\\
-
-Avoid hardcoded or magic numbers. Magic numbers are numbers present directly in the source code, that do not have a name and therefore can be difficult to interpret semantically. Hardcoded values are variables that cannot be changed through a function argument or a parameter configuration file. To be modified, they involve editing the code, which is cumbersome and error-prone. In the R$^3$ code, the seed and the number of steps are respectively hardcoded and magic.\\
-
-Similarly, code behavior should not be changed by commenting/uncommenting code \citep{Wilson:2017}. Modification of the behavior of the code, required when different experiments examine slightly different conditions, should always be explicitly set through parameters accessible to the end-user. This improves reproducibility in two ways: it allows those conditions to be recorded as parameters in the result files, and it allows to define separate scripts to run or configuration files to load to produce each of the figures of the published paper. With documentation explaining which script or configuration file corresponds to which experiment, reproducing the different figures becomes straightforward.\\
-
+\begin{figure}
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 5:}} Re-runnable, repeatable, reproducible, reusable random walk (R$^4$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R4.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 4:}} Re-runnable, repeatable, reproducible, reusable random walk (R$^4$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R4.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
@@ -424,6 +414,21 @@ if __name__ == '__main__':
     print(results['data'])
 \end{code}
 \end{minipage}\\
+\end{figure}
+
+For you, first. Because the you now and the you in two years are two different persons. Details on how to use the code, its limitations, its quirks, may be present to your mind now, but will probably escape you in six months \parencite{Donoho:2009}. Here, comments and documentation can make a significant difference. Source code reflects the results of the decisions that were made during its creation, but not the reasons behind those decisions. In science, where the method and its justification matter as much as the results, those reasons are precious knowledge. In that context, a comment on how a given parameter was chosen (optimization, experimental data, educated guess), why a library was chosen over another (conceptual or technical reasons?) is valuable information.\\
+
+% Research team typically experience a high turnover of interns, doctoral and post-doctoral students. Can you reproduce the results of member after leave your team?
+
+Reusability of course directly benefits other researchers from your team and outside of it. The easier it is to use your code, the lower the threshold is for other to study, modify and extend it. Scientists constantly face the constraint of time: if a model is available, documented, and can be installed, run and understood all in a few hours, it will be preferred over another that would require weeks to reach the same stage. A reproducible and reusable code offers a platform both \emph{verifiable} and easy-to-use, fostering the development of derivative works by other researchers on solid foundations. Those derivative works contribute to the impact of your original contribution.\\
+
+Having more people examining and using your code also means that potential errors have a higher chance to be caught. If people start using your program, they will most likely report bugs or malfunctions they encounter. If you're lucky enough, they might even propose either bug fixes or improvements, hence improving the overall quality of your software. This process contributes to the long-term reproducibility to the extent people continue to use and maintain the program.\\
+
+Despite all this, reusability is often overlooked, and it is not hard to see why. Scientists are rarely trained in software engineering, and reusability can represent an expensive endeavour if undertaken as an afterthought, for little tangible short-term benefits, for a codebase that might, after all, only see a single use. And, in fact, reusability is not as indispensable a requirement as re-runnability, repeatability and reproducibility. Yet, some simple measures can tremendously increase reusability, and at the same time strengthen reproducibility and re-runnability over the long-term.\\
+
+Avoid hardcoded or magic numbers. Magic numbers are numbers present directly in the source code, that do not have a name and therefore can be difficult to interpret semantically. Hardcoded values are variables that cannot be changed through a function argument or a parameter configuration file. To be modified, they involve editing the code, which is cumbersome and error-prone. In the R$^3$ code, the seed and the number of steps are respectively hardcoded and magic.\\
+
+Similarly, code behavior should not be changed by commenting/uncommenting code \citep{Wilson:2017}. Modification of the behavior of the code, required when different experiments examine slightly different conditions, should always be explicitly set through parameters accessible to the end-user. This improves reproducibility in two ways: it allows those conditions to be recorded as parameters in the result files, and it allows to define separate scripts to run or configuration files to load to produce each of the figures of the published paper. With documentation explaining which script or configuration file corresponds to which experiment, reproducing the different figures becomes straightforward.\\
 
 Documentation is one of the most potent tools for reusability. A proper documentation on how to install and run the software often makes the difference whether other researchers manage to use it or not. A comment describing what each function does, however evident, can avoid hours of head-scratching. Great code may need few comments. Scientists, however, are not always brilliant developers. Of course, bad, complicated code should be rewritten until is simple enough to explain itself. But realistically, this is not always going to be done: there is simply not enough incentive for it. There, a comment that explains the intentions and reasons behind a block of code can be tremendously useful.\\
 
@@ -450,18 +455,9 @@ This is because most papers strive to communicate the main ideas behind their co
 % errors may always remain: reproducibility does not make reproducibility useless.
 But even when those details are present, the best efforts may fall short because an oversight, a typo or a difference between what is evident for the writer and for the reader \citep{Mesnard:2016}. Minute changes in the numerical estimation of a common first-order differential equation can have significant impact \citep{Crook:2013}. Hence, a reproducible code plays an important role alongside its article: it is a objective catalog of all the implementation details.\\
 
-A researcher seeking to replicate published results might first consider only the article. If she fails to replicate the results, she will consult the original code, and with it be able to pinpoint why her code and the code of the authors differ in behavior. Because a mistake on their part? Hers? Or a difference in a seemingly innocuous implementation detail? A fine analysis of why a particular algorithmic description is lacking or ambiguous or why a minor implementation decision is in fact crucial to obtain the published results is of great scientific value. Such an analysis can only be done with access to both the article and the code. With only the article, the researcher will often be unable to understand why she failed to replicate the results, and will naturally be inclined to only report replication successes.\\
-
-Replicability, therefore, does not negate the necessity of reproducibility. In fact, it often relies on it. To illustrate this, let us consider what could be the description of the random walker, as it would be written in an article describing it:
-%
-\begin{quotation}
-{\em The model uses the Mersene Twister generator initialized with the seed 1. At each iteration, a uniform number between -1 (included) and +1 (excluded) is drawn and the sign of the result is used for generating a positive or negative step.}
-\end{quotation}
-%
-This description, while somewhat precise, forgoes---as it is common---the initialization of the variables (here the starting value of the walk: {\tt 0}), and the technical details about which implementation of the RNG is used.\\
-
+\begin{figure}[b!]
 \noindent \begin{minipage}[c]{\linewidth}
-\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 6:}} Replicated random walk (R$^5$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R5.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
+\begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 5:}} Replicated random walk (R$^5$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R5.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
 # Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
 # Release under the BSD 2-clause license
 # Tested with CPython 3.6.2 / NumPy 1.12.0 / macOS 10.12.6 / 64 bits architecture
@@ -502,6 +498,19 @@ if __name__ == '__main__':
     print(path)
 \end{code}
 \end{minipage}
+\end{figure}
+
+A researcher seeking to replicate published results might first consider only the article. If she fails to replicate the results, she will consult the original code, and with it be able to pinpoint why her code and the code of the authors differ in behavior. Because a mistake on their part? Hers? Or a difference in a seemingly innocuous implementation detail? A fine analysis of why a particular algorithmic description is lacking or ambiguous or why a minor implementation decision is in fact crucial to obtain the published results is of great scientific value. Such an analysis can only be done with access to both the article and the code. With only the article, the researcher will often be unable to understand why she failed to replicate the results, and will naturally be inclined to only report replication successes.\\
+
+Replicability, therefore, does not negate the necessity of reproducibility. In fact, it often relies on it. To illustrate this, let us consider what could be the description of the random walker, as it would be written in an article describing it:
+%
+\begin{quotation}
+{\em The model uses the Mersene Twister generator initialized with the seed 1. At each iteration, a uniform number between -1 (included) and +1 (excluded) is drawn and the sign of the result is used for generating a positive or negative step.}
+\end{quotation}
+%
+This description, while somewhat precise, forgoes---as it is common---the initialization of the variables (here the starting value of the walk: {\tt 0}), and the technical details about which implementation of the RNG is used.\\
+
+
 
 % NumPy and Python: differences in the Mersene Twister
 It may look innocuous. After all, the
