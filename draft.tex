@@ -193,7 +193,8 @@ for i in xrange(10):
 
 In the code above, the {\tt \href{https://docs.python.org/3.6/library/random.html#random.choice}{random.choice}} function randomly returns either +1 or -1. The instruction \enquote{\tt for i in xrange(10):}  executes the next three indented lines ten times. Executed, this program would display:
 \begin{code}{Output}
--1, 0, -1, 0, -1, 0, -1, 0, 1, 2 # with the steps being -1, +1, -1, +1, -1, +1, -1, +1, +1, +1
+-1, 0, -1, 0, -1, 0, -1, 0, 1, 2
+# with the steps being -1,+1,-1,+1,-1,+1,-1,+1,+1,+1
 \end{code}
 
 What could go wrong with such a simple program?\\
@@ -226,7 +227,7 @@ print(walk)
 \end{code}
 \end{minipage}\\
 
-In our case, the R$^0$ version of our tiny walker seems to imply that any version of Python would be fine. This not the case: it uses the print {\em instruction} and the {\tt xrange} operator, both specific to Python 2. The print {\em instruction}, available in Python 2 (a version still widely used; support is scheduled to stop in 2020), has been deprecated in Python 3 (first released in 2008, almost a decade ago) in favor of a  print {\em function}, while the {\tt xrange} operator has been replaced by the {\tt range} operator in Python 3. In order to try to future-proof the code a bit, we might as well target Python 3, as is done in the R$^1$ version. Incidentally, it remains compatible with Python 2. But whichever version is chosen, the crucial step here is to document it.
+In our case, the R$^0$ version of our tiny walker seems to imply that any version of Python would be fine. This not the case: it uses the print {\em instruction} and the {\tt xrange} operator, both specific to Python 2. The print {\em instruction}, available in Python 2 (a version still widely used; support is scheduled to stop in 2020), has been deprecated in Python 3 (first released in 2008, almost a decade ago) in favor of a print {\em function}, while the {\tt xrange} operator has been replaced by the {\tt range} operator in Python 3. In order to try to future-proof the code a bit, we might as well target Python 3, as is done in the R$^1$ version. Incidentally, it remains compatible with Python 2. But whichever version is chosen, the crucial step here is to document it.
 
 
 % \clearpage
@@ -300,12 +301,12 @@ Another good practice is to make the code self-verifiable. In R$^3$, a short uni
 \begin{figure}[t!]
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 3:}} Re-runnable, repeatable, reproducible random walk (R$^3$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R3.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
-# Copyright (c) 2017 Nicolas P. Rougier and Fabien C. Y. Benureau
+# Copyright (c) 2017 N.P. Rougier and F.C.Y. Benureau
 # Release under the BSD 2-clause license
-# Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
+# Tested with 64-bit CPython 3.6.2 / macOS 10.12.6
 import sys, subprocess, datetime, random
 
-def generate_walk():
+def compute_walk():
     x = 0
     walk = []
     for i in range(10):
@@ -316,31 +317,34 @@ def generate_walk():
         walk.append(x)
     return walk
 
-# If repository is dirty, don't run anything
-if subprocess.call(('git', 'diff-index', '--quiet', 'HEAD')):
-    print('Repository is dirty, please commit first')
+# If repository is dirty, don"t run anything
+if subprocess.call(("git", "diff-index",
+                    "--quiet", "HEAD")):
+    print("Repository is dirty, please commit first")
     sys.exit(1)
 
 # Get git hash if any
-revision = subprocess.check_output(('git', 'rev-parse', 'HEAD'))
+hash_cmd = ("git", "rev-parse", "HEAD")
+revision = subprocess.check_output(hash_cmd)
 
 # Unit test
 random.seed(42)
-assert generate_walk() == [1, 0, -1, -2, -1, 0, 1, 0, -1, -2]
+assert compute_walk() == [1,0,-1,-2,-1,0,1,0,-1,-2]
 
 # Random walk for 10 steps
 seed = 1
 random.seed(seed)
-walk = generate_walk()
+walk = compute_walk()
 
 # Display & save results
 print(walk)
-results = {'data'       : walk,
-            'seed'      : seed,
-            'timestamp': str(datetime.datetime.utcnow()),
-            'revision' : revision,
-            'system'    : sys.version}
-with open('results-R3.txt', 'w') as fd:
+results = {
+    "data"     : walk,
+    "seed"     : seed,
+    "timestamp": str(datetime.datetime.utcnow()),
+    "revision" : revision,
+    "system"   : sys.version}
+with open("results-R3.txt", "w") as fd:
     fd.write(str(results))
 \end{code}
 \end{minipage}\\
@@ -361,17 +365,18 @@ Making your program reusable means it can be easily used, and modified, by you a
 \begin{figure}
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 4:}} Re-runnable, repeatable, reproducible, reusable random walk (R$^4$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R4.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
-# Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
+# Copyright (c) 2017 N.P. Rougier and F.C.Y. Benureau
 # Release under the BSD 2-clause license
-# Tested with CPython 3.6.2 / macOS 10.12.6 / 64 bits architecture
+# Tested with 64-bit CPython 3.6.2 / macOS 10.12.6
 import sys, subprocess, datetime, random
 
-def generate_walk(count, x0=0, step=1, seed=0):
-    """ Random walk
-        count: number of steps
-        x0   : initial position (default 0)
-        step : step size (default 1)
-        seed : seed for the initialization of the random generator (default 0)
+def compute_walk(count, x0=0, step=1, seed=0):
+    """Random walk
+       count: number of steps
+       x0   : initial position (default 0)
+       step : step size (default 1)
+       seed : seed for the initialization of the
+	     random generator (default 0)
     """
     random.seed(seed)
     x = x0
@@ -384,36 +389,43 @@ def generate_walk(count, x0=0, step=1, seed=0):
         walk.append(x)
     return walk
 
-def generate_results(count, x0=0, step=1, seed=0):
-    """Compute a walk and return it alongside its context"""
-    # If repository is dirty, don't do anything
-    if subprocess.call(('git', 'diff-index', '--quiet', 'HEAD')):
-        print('Repository is dirty, please commit first')
+def compute_results(count, x0=0, step=1, seed=0):
+    """Compute a walk and return it with context"""
+    # If repository is dirty, don"t do anything
+    if subprocess.call(("git", "diff-index",
+                        "--quiet", "HEAD")):
+        print("Repository is dirty, please commit")
         sys.exit(1)
 
     # Get git hash if any
-    revision = subprocess.check_output(('git', 'rev-parse', 'HEAD'))
+    hash_cmd = ("git", "rev-parse", "HEAD")
+    revision = subprocess.check_output(hash_cmd)
 
     # Compute results
-    walk = generate_walk(count=count, x0=x0, step=step, seed=seed)
-    return {'data'      : walk,
-            'parameters': {'x0':x0, 'step':step, 'count':count, 'seed':seed},
-            'timestamp' : str(datetime.datetime.utcnow()),
-            'revision'  : revision,
-            'system'    : sys.version}
+    walk = compute_walk(count=count, x0=x0,
+                        step=step, seed=seed)
+    return {
+        "data"      : walk,
+        "parameters": {"count": count, "x0": x0,
+                       "step": step, "seed": seed},
+        "timestamp" : str(datetime.datetime.utcnow()),
+        "revision"  : revision,
+        "system"    : sys.version}
 
-if __name__ == '__main__':
-    # Unit test checking reproducibility (will fail with Python<=3.2)
-    assert generate_walk(10, 0, 1, 42) == [1, 0, -1, -2, -1, 0, 1, 0, -1, -2]
+if __name__ == "__main__":
+    # Unit test checking reproducibility
+    # (will fail with Python<=3.2)
+    assert (compute_walk(10, 0, 1, 42) ==
+	        [1,0,-1,-2,-1,0,1,0,-1,-2])
 
     # Simulation parameters
     count, x0, seed = 10, 0, 1
-    results = generate_results(count, x0=x0, seed=seed)
+    results = compute_results(count, x0=x0, seed=seed)
 
     # Save & display results
-    with open('results-R4.txt', 'w') as fd:
+    with open("results-R4.txt", "w") as fd:
         fd.write(str(results))
-    print(results['data'])
+    print(results["data"])
 \end{code}
 \end{minipage}\\
 \end{figure}
@@ -460,41 +472,43 @@ But even when those details are present, the best efforts may fall short because
 \begin{figure}[b!]
 \noindent \begin{minipage}[c]{\linewidth}
 \begin{code}{\parbox{.8\textwidth}{\textbf{\textsc{Listing 5:}} Replicated random walk (R$^5$)}\parbox{.161\textwidth}{\hfill \href{https://raw.githubusercontent.com/rougier/random-walk/frontiers/random-walk-R5.py}{raw code}, \href{https://doi.org/10.5281/zenodo.848217}{archive}}}
-# Copyright (c) 2017 Nicolas P. Rougier and Fabien C.Y. Benureau
+# Copyright (c) 2017 N.P. Rougier and F.C.Y. Benureau
 # Release under the BSD 2-clause license
-# Tested with CPython 3.6.2 / NumPy 1.12.0 / macOS 10.12.6 / 64 bits architecture
+# 64-bit CPython 3.6.2 / NumPy 1.12.0 / macOS 10.12.6
 import random
 import numpy as np
 
 def _rng(seed):
-    """ Return a numpy random number generator initialized with seed
-        as it would be with python random generator.
+    """Return a numpy random number generator
+       initialized with seed as it would be with
+       a python random generator.
     """
     rng = random.Random()
     rng.seed(seed)
     _, keys, _ = rng.getstate()
     rng = np.random.RandomState()
     state = rng.get_state()
-    rng.set_state((state[0], keys[:-1], state[2], state[3], state[4]))
+    rng.set_state((state[0], keys[:-1], state[2],
+		           state[3], state[4]))
     return rng
 
 def walk(n, seed):
-    """ Random walk for n steps """
-
+    """Random walk for n steps"""
     rng = _rng(seed)
-    steps = 2*(rng.uniform(-1,+1,n) > 0) - 1
+    steps = 2 * (rng.uniform(-1, +1, n) > 0) - 1
     return steps.cumsum().tolist()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Unit test
-    assert walk(n=10, seed=42) == [1, 0, -1, -2, -1, 0, 1, 0, -1, -2]
+    assert (walk(n=10, seed=42) ==
+            [1,0,-1,-2,-1,0,1,0,-1,-2])
 
-    # Random walk for 10 steps, initialization with seed=1
+    # Random walk for 10 steps, with seed=1
     seed = 1
     path = walk(n=10, seed=seed)
 
     # Save & display results
-    results = {'data': path, 'seed': seed}
+    results = {"data": path, "seed": seed}
     with open("results-R5.txt", "w") as fd:
         fd.write(str(results))
     print(path)
